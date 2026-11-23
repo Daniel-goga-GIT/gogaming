@@ -30,6 +30,8 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. Los tests son casi todos los generados por defecto. No hay README. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
+9. Revisado solo por encima: panel de admin (`/dashboard`), login/registro/2FA y el flujo de Google OAuth (el `FRONTEND_OAUTH2_REDIRECT_URI` del `.env` apunta mal: `https://localhost:8080/oauth2/callback`).
+10. `SecurityConfig`: los `permitAll` de productos no filtran por método. Hoy está protegido por `@PreAuthorize`, pero conviene limitarlos a `GET`.
 
 ## Estado de las claves (23 nov 2026)
 
@@ -84,3 +86,13 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Los modelos gratuitos "razonan" antes de responder: se piden `reasoning.effort=low` y `max_tokens=2000` (con 600 devolvían la respuesta vacía). Ante un 429 se reintenta una vez y después se pasa al siguiente modelo.
 - El prompt incluye el **catálogo real** (marca, producto, categoría, precio y stock, cacheado 5 min) y prohíbe inventar especificaciones.
 - El frontend formatea las respuestas de forma segura (escapa el HTML y solo aplica **negritas** y viñetas).
+
+## Próximos pasos (por orden)
+
+1. Probar un pago completo con la tarjeta 4242 (nadie lo ha hecho todavía de principio a fin).
+2. Refactor: un único `ProductoController`/servicio genérico en el backend y un listado/detalle genérico en el frontend, en lugar de 6 copias por categoría. `CartFeedbackService` y `ProductCard` ya están unificados.
+3. Limpieza: `pom.xml` (dependencias duplicadas, Thymeleaf, `data-jdbc`, `annotations:RELEASE`), Tailwind 3/4 mezclados y renombrar el paquete a `com.gogaming`.
+4. Revisar dashboard, login/registro/2FA y OAuth.
+5. Tests + README con capturas.
+6. Servidor MCP (`mcp-server/`) sobre la API: buscar productos, consultar stock y resumen de pedidos.
+7. Despliegue (frontend + backend + BD gestionada) y webhook de Stripe en producción.

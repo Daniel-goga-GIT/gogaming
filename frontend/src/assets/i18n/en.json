@@ -27,11 +27,11 @@
   "HOME": {
     "HERO_TITLE": "Hot Deals!",
     "HERO_SUBTITLE": "Amazing prices for a limited time",
-    "BUY_NOW": "Buy Now",
+    "BUY_NOW": "Shop deals",
     "FEATURED_PRODUCTS_TITLE": "Discover our featured products",
     "FEATURED_BADGE": "Featured",
     "SOLD_OUT_BADGE": "Sold Out",
-    "FREE_SHIPPING": "Free shipping. Delivery tomorrow",
+    "FREE_SHIPPING": "Free shipping · 24 h delivery",
     "OPINIONS": "reviews",
     "FEATURED_PRODUCTS": "Featured Products"
   },
@@ -47,7 +47,9 @@
     "CONTACT_HELP": "Contact & Help",
     "RETURNS_GUARANTEES": "Returns & Guarantees",
     "COMMUNITY": "Social",
-    "RIGHTS_RESERVED": "All rights reserved."
+    "RIGHTS_RESERVED": "All rights reserved.",
+    "PROJECT": "Project",
+    "SOURCE_CODE": "Source on GitHub"
   },
   "PROFILE": {
     "CHANGE_PHOTO": "Change photo",
@@ -108,8 +110,8 @@
   "LOGIN": {
     "FEATURES_MANAGE_ORDERS": "Manage your orders",
     "FEATURES_MANAGE_ORDERS_MSG": "Take control of all your orders and receive tracking notifications",
-    "FEATURES_WISHLIST": "Personalized wishlist",
-    "FEATURES_WISHLIST_MSG": "Save your favorite products in personalized wishlists",
+    "FEATURES_WISHLIST": "Rate & review",
+    "FEATURES_WISHLIST_MSG": "Share your experience with each product and help other gamers choose",
     "TITLE": "Log in",
     "ALREADY_LOGGED": "You are already logged in,",
     "EMAIL_PLACEHOLDER": "Email*",
@@ -139,8 +141,8 @@
     "BUTTON": "Create account",
     "ALREADY_HAVE_ACCOUNT": "Already have an account?",
     "LOGIN_HERE": "Log in here",
-    "BENEFITS_WISHLIST_TITLE": "Personalized wishlist",
-    "BENEFITS_WISHLIST_MSG": "Save your favorite products in personalized wishlists.",
+    "BENEFITS_WISHLIST_TITLE": "Rate & review",
+    "BENEFITS_WISHLIST_MSG": "Post reviews of the products you've tried.",
     "BENEFITS_FASTER_TITLE": "Faster orders",
     "BENEFITS_FASTER_MSG": "Store your data and buy in fewer steps.",
     "BENEFITS_PROFILE_TITLE": "Personalized profile",
@@ -196,7 +198,12 @@
     "NOT_FOUND_MSG": "Oops! It looks like you've got lost on the map. The page you are looking for does not exist or has been moved."
   },
   "PRODUCTS": {
-    "RATONES_TITLE": "Mouses"
+    "RATONES_TITLE": "Gaming mice",
+    "TECLADOS_TITLE": "Gaming keyboards",
+    "SKATES_TITLE": "Mouse skates",
+    "ALFOMBRILLAS_TITLE": "Gaming mousepads",
+    "AURICULARES_TITLE": "IEMs & gaming headsets",
+    "MANGAS_TITLE": "Gaming sleeves"
   },
   "RATINGS": {
     "SECTION_TITLE": "Ratings and reviews",
@@ -206,6 +213,63 @@
     "PUBLISH": "Publish review",
     "EMPTY": "There are no reviews for this product yet.",
     "PREV": "Previous",
-    "NEXT": "Next"
+    "NEXT": "Next",
+    "LOGIN_TO_REVIEW": "Sign in to write a review."
+  },
+  "NOTIFY": {
+    "CART_ADDED": "Added to cart",
+    "CART_ADDED_QTY": "{{name}} · {{quantity}} in your cart",
+    "VIEW_CART": "View cart",
+    "OUT_OF_STOCK": "Out of stock",
+    "OUT_OF_STOCK_MSG": "{{name}} is currently unavailable.",
+    "STOCK_LIMIT": "No more units left",
+    "STOCK_LIMIT_MSG": "Only {{available}} available and they're all in your cart already.",
+    "COMING_SOON": "Coming soon",
+    "PDF_SOON_MSG": "PDF invoice downloads will be available very soon.",
+    "LOGIN_TO_CHECKOUT": "Sign in to complete your order",
+    "LOGIN_TO_CHECKOUT_MSG": "Your cart is saved — you'll come right back here."
+  },
+  "PRODUCT": {
+    "FEATURED": "Featured",
+    "SOLD_OUT": "Sold out",
+    "LOW_STOCK": "Only {{count}} left",
+    "NO_REVIEWS": "No reviews yet",
+    "REVIEWS_COUNT": "{{count}} reviews",
+    "FREE_SHIPPING": "Free 24 h shipping",
+    "VAT_INCLUDED": "VAT included",
+    "ADD_TO_CART": "Add to cart",
+    "NO_REVIEWS_CTA": "No reviews yet · be the first!"
+  },
+  "LIST": {
+    "SEARCH_PLACEHOLDER": "Search by name or brand…",
+    "SORT_NAME": "Sort by name",
+    "SORT_PRICE": "Sort by price",
+    "SORT_BRAND": "Sort by brand",
+    "SORT_STOCK": "Sort by availability",
+    "OF": "of",
+    "SHOWING": "Showing {{count}} of {{total}} products",
+    "PREV": "Previous page",
+    "NEXT": "Next page"
+  },
+  "CATEGORY": {
+    "Raton": "Mouse",
+    "Teclado": "Keyboard",
+    "Skate": "Skates",
+    "Alfombrilla": "Mousepad",
+    "Auriculares": "Headphones",
+    "Manga": "Gaming sleeve"
+  },
+  "STOCK": {
+    "IN_STOCK": "In stock",
+    "LAST_UNITS": "Only {{count}} left!",
+    "SOLD_OUT": "Sold out"
+  },
+  "SEARCH": {
+    "TITLE": "Search products",
+    "RESULTS_FOR": "Results for",
+    "COUNT": "{{count}} products found",
+    "EMPTY_TITLE": "We couldn't find anything",
+    "EMPTY_MSG": "Try another word or a brand name (Logitech, Razer, Wooting…).",
+    "ERROR": "The search couldn't be completed. Please try again."
   }
 }

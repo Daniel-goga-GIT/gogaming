@@ -1,7 +1,7 @@
+import { Buscar } from './features/buscar/buscar';
 import { Routes } from '@angular/router'
 import { Home } from './features/home/home'
 import { About } from './features/about/about'
-import { FuturasMejoras } from './features/futuras-mejoras/futuras-mejoras'
 import { Login } from './features/login/login'
 import { Register } from './features/register/register'
 import { Forbidden } from './features/forbidden/forbidden';
@@ -45,38 +45,38 @@ export const routes: Routes = [
   { path: '', component: Home },
   { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
   { path: 'twofactor', component: Twofactor },
-  { path: 'about', component: About, canActivate: [authGuardLogin] },
-  { path: 'futuras-mejoras', component: FuturasMejoras, canActivate: [authGuardLogin] },
+  { path: 'about', component: About },
+  { path: 'buscar', component: Buscar },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   
 
   // Ratones
-  { path: 'ratones', component: Ratones, canActivate: [authGuardLogin] },
-  { path: 'productos/raton/:id', component: RatonDetail, canActivate: [authGuardLogin] },
+  { path: 'ratones', component: Ratones },
+  { path: 'productos/raton/:id', component: RatonDetail },
 
   // Teclados
-  { path: 'teclados', component: Teclados, canActivate: [authGuardLogin] },
-  { path: 'productos/teclado/:id', component: TecladoDetail, canActivate: [authGuardLogin] },
+  { path: 'teclados', component: Teclados },
+  { path: 'productos/teclado/:id', component: TecladoDetail },
 
   // Skates
-  { path: 'skates', component: Skates, canActivate: [authGuardLogin] },
-  { path: 'productos/skate/:id', component: SkateDetail, canActivate: [authGuardLogin] },
+  { path: 'skates', component: Skates },
+  { path: 'productos/skate/:id', component: SkateDetail },
 
   // Alfombrillas
-  { path: 'alfombrillas', component: Alfombrillas, canActivate: [authGuardLogin] },
-  { path: 'productos/alfombrilla/:id', component: AlfombrillaDetail, canActivate: [authGuardLogin] },
+  { path: 'alfombrillas', component: Alfombrillas },
+  { path: 'productos/alfombrilla/:id', component: AlfombrillaDetail },
 
   // Auriculares (ruta del header: /iem-cascos)
-  { path: 'iem-cascos', component: Auriculares, canActivate: [authGuardLogin] },
-  { path: 'productos/auriculares/:id', component: AuricularDetail, canActivate: [authGuardLogin] },
+  { path: 'iem-cascos', component: Auriculares },
+  { path: 'productos/auriculares/:id', component: AuricularDetail },
 
   // Mangas
-  { path: 'mangas', component: Mangas, canActivate: [authGuardLogin] },
-  { path: 'productos/manga/:id', component: MangaDetail, canActivate: [authGuardLogin] },
+  { path: 'mangas', component: Mangas },
+  { path: 'productos/manga/:id', component: MangaDetail },
 
   // Carrito y pagos
-  { path: 'cesta', component: Cart, canActivate: [authGuardLogin] },
+  { path: 'cesta', component: Cart },
   { path: 'pago-completado', component: PagoCompletado, canActivate: [authGuardLogin] },
 
   // Perfil

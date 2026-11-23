@@ -17,7 +17,7 @@ INSERT IGNORE INTO productos (idproducto, nombre, marca, fecha_publicacion, prec
     (2,  'X2H', 'Pulsar', '2023-08-15', 99.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433640/36416_1-Photoroom_uzaubv.png'),
     (3,  'Viper V3 Pro Faker Edition', 'Razer', '2024-05-10', 179.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433640/33661_1-Photoroom_bisgml.png'),
     (4,  'Hyperlight', 'Hitscan', '2024-01-20', 119.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433624/32162_1-Photoroom_k5ayyq.png'),
-    (5,  'Maya X', 'Lamzu', '2024-04-05', 0.50, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433639/32788_1-Photoroom_bzmpzm.png'),
+    (5,  'Maya X', 'Lamzu', '2024-04-05', 109.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433639/32788_1-Photoroom_bzmpzm.png'),
     (6,  'XLite V4', 'Pulsar', '2024-06-01', 99.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433640/34659_1-Photoroom_tdnfz7.png'),
     (7,  'Sora V2', 'Ninjutso', '2024-03-15', 109.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/v1776433640/37687_1-Photoroom_n6meua.png'),
     (8,  'G Pro X Superlight 2', 'Logitech', '2023-09-05', 159.99, 20, 'Raton', 'https://res.cloudinary.com/dcl5dstmj/image/upload/f_auto,q_auto/28012_1-Photoroom_xyytyt'),

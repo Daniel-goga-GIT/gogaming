@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { PricePipe } from '../../shared/pipes/price.pipe';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -6,17 +7,21 @@ import { UserService } from '../../core/services/user';
 import { AuthService } from '../../core/services/auth';
 import { TicketService, TicketResponse } from '../../core/services/ticket.service';
 import { RatingService } from '../../core/services/rating.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../core/services/notification.service';
 import { RatingDTO, UserDTO } from '../../models/types';
 import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-me',
-  imports: [CommonModule, RouterLink, TranslateModule],
+  imports: [PricePipe, CommonModule, RouterLink, TranslateModule],
   templateUrl: './me.html',
   styleUrl: './me.css'
 })
 export class Me implements OnInit {
+  private notify = inject(NotificationService);
+  private translate = inject(TranslateService);
+
   user: UserDTO = new UserDTO();
   email: string | null = null;
   tickets: TicketResponse[] = [];
@@ -37,7 +42,7 @@ export class Me implements OnInit {
   ngOnInit(): void {
     // Obtener el email del usuario autenticado
     // Pero lo censuramos para no exponerlo
-   this.email = this.authService.getUsername()?.replace(/^(.)[^@]+/, '$1****') ?? '';
+   this.email = this.authService.getUsername() ?? '';
     this.userService.fetchUser().subscribe({
       next: (res: UserDTO) => {
         this.user.firstName = res.firstName ?? '';
@@ -145,6 +150,6 @@ export class Me implements OnInit {
   }
 
   descargarPDF() {
-    alert('Proximamente se implementara la descarga de PDFs');
+    this.notify.info(this.translate.instant('NOTIFY.COMING_SOON'), { message: this.translate.instant('NOTIFY.PDF_SOON_MSG') });
   }
 }

@@ -1,3 +1,4 @@
+import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -5,13 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { TecladoService } from '../../../../core/services/teclado.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { CreateRatingRequest, ProductRatingSummary, TecladoDTO, RatingDTO } from '../../../../models/types';
-import { CartService } from '../../../../core/services/cart.service';
+import { CartFeedbackService } from '../../../../core/services/cart-feedback.service';
 import { RatingService } from '../../../../core/services/rating.service';
 
 @Component({
   selector: 'app-teclado-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [PricePipe, CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './teclado-detail.html',
   styleUrls: ['./teclado-detail.css']
 })
@@ -34,7 +35,7 @@ export class TecladoDetail implements OnInit {
     private router: Router,
     private tecladoService: TecladoService,
     private ratingService: RatingService,
-    private cartService: CartService
+    private cartFeedback: CartFeedbackService
   ) {}
 
   ngOnInit(): void {
@@ -102,6 +103,14 @@ export class TecladoDetail implements OnInit {
       });
   }
 
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('gogaming_token') && localStorage.getItem('twofactor') === 'false';
+  }
+
+  rememberReturn(): void {
+    sessionStorage.setItem('gogaming_return_url', this.router.url);
+  }
+
   canSubmitReview(): boolean {
     return this.formRating >= 1 && this.formRating <= 5;
   }
@@ -149,8 +158,7 @@ export class TecladoDetail implements OnInit {
 
   addToCart(): void {
     if (this.teclado) {
-      this.cartService.addToCart(this.teclado);
-      alert('Teclado añadido correctamente al carrito.');
+      this.cartFeedback.add(this.teclado);
     }
   }
 }

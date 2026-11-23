@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { PricePipe } from '../../shared/pipes/price.pipe';
+import { NotificationService } from '../../core/services/notification.service';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog.service';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,11 +23,14 @@ type Section = 'ratones' | 'teclados' | 'skates' | 'alfombrillas' | 'auriculares
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [PricePipe, CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
+  private notify = inject(NotificationService);
+  private confirmDialog = inject(ConfirmDialogService);
+
   sidebarOpen = false;
   activeSection: Section = 'ratones';
   loading = false;
@@ -141,16 +147,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadRatones();
         this.closeForm();
+        this.notify.success('Ratón guardado');
       },
-      error: () => alert('Error al guardar el ratón')
+      error: () => this.notify.error('No se pudo guardar el ratón', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteRaton(id: number): void {
-    if (!confirm('¿Eliminar este ratón?')) return;
+  async deleteRaton(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar este ratón?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.ratonService.deleteRaton(id).subscribe({
-      next: () => this.loadRatones(),
-      error: () => alert('Error al eliminar el ratón')
+      next: () => {
+        this.loadRatones();
+        this.notify.success('Ratón eliminado');
+      },
+      error: () => this.notify.error('No se pudo eliminar el ratón', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 
@@ -198,16 +208,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadTeclados();
         this.closeForm();
+        this.notify.success('Teclado guardado');
       },
-      error: () => alert('Error al guardar el teclado')
+      error: () => this.notify.error('No se pudo guardar el teclado', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteTeclado(id: number): void {
-    if (!confirm('¿Eliminar este teclado?')) return;
+  async deleteTeclado(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar este teclado?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.tecladoService.deleteTeclado(id).subscribe({
-      next: () => this.loadTeclados(),
-      error: () => alert('Error al eliminar el teclado')
+      next: () => {
+        this.loadTeclados();
+        this.notify.success('Teclado eliminado');
+      },
+      error: () => this.notify.error('No se pudo eliminar el teclado', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 
@@ -255,16 +269,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadSkates();
         this.closeForm();
+        this.notify.success('Skate guardado');
       },
-      error: () => alert('Error al guardar el skate')
+      error: () => this.notify.error('No se pudo guardar el skate', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteSkate(id: number): void {
-    if (!confirm('¿Eliminar este skate?')) return;
+  async deleteSkate(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar este skate?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.skateService.deleteSkate(id).subscribe({
-      next: () => this.loadSkates(),
-      error: () => alert('Error al eliminar el skate')
+      next: () => {
+        this.loadSkates();
+        this.notify.success('Skate eliminado');
+      },
+      error: () => this.notify.error('No se pudo eliminar el skate', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 
@@ -312,16 +330,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadAlfombrillas();
         this.closeForm();
+        this.notify.success('Alfombrilla guardada');
       },
-      error: () => alert('Error al guardar la alfombrilla')
+      error: () => this.notify.error('No se pudo guardar la alfombrilla', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteAlfombrilla(id: number): void {
-    if (!confirm('¿Eliminar esta alfombrilla?')) return;
+  async deleteAlfombrilla(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar esta alfombrilla?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.alfombrillaService.deleteAlfombrilla(id).subscribe({
-      next: () => this.loadAlfombrillas(),
-      error: () => alert('Error al eliminar la alfombrilla')
+      next: () => {
+        this.loadAlfombrillas();
+        this.notify.success('Alfombrilla eliminada');
+      },
+      error: () => this.notify.error('No se pudo eliminar la alfombrilla', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 
@@ -369,16 +391,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadAuriculares();
         this.closeForm();
+        this.notify.success('Auriculares guardados');
       },
-      error: () => alert('Error al guardar los auriculares')
+      error: () => this.notify.error('No se pudo guardar los auriculares', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteAuriculares(id: number): void {
-    if (!confirm('¿Eliminar estos auriculares?')) return;
+  async deleteAuriculares(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar estos auriculares?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.auricularesService.deleteAuriculares(id).subscribe({
-      next: () => this.loadAuriculares(),
-      error: () => alert('Error al eliminar los auriculares')
+      next: () => {
+        this.loadAuriculares();
+        this.notify.success('Auriculares eliminados');
+      },
+      error: () => this.notify.error('No se pudo eliminar los auriculares', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 
@@ -426,16 +452,20 @@ export class Dashboard implements OnInit {
       next: () => {
         this.loadMangas();
         this.closeForm();
+        this.notify.success('Manga guardado');
       },
-      error: () => alert('Error al guardar la manga')
+      error: () => this.notify.error('No se pudo guardar el manga', { message: 'Revisa los datos e inténtalo de nuevo.' })
     });
   }
 
-  deleteManga(id: number): void {
-    if (!confirm('¿Eliminar esta manga?')) return;
+  async deleteManga(id: number): Promise<void> {
+    if (!(await this.confirmDialog.confirm({ title: '¿Eliminar este manga?', message: 'Esta acción no se puede deshacer.', confirmText: 'Eliminar', variant: 'danger' }))) return;
     this.mangaService.deleteManga(id).subscribe({
-      next: () => this.loadMangas(),
-      error: () => alert('Error al eliminar la manga')
+      next: () => {
+        this.loadMangas();
+        this.notify.success('Manga eliminado');
+      },
+      error: () => this.notify.error('No se pudo eliminar el manga', { message: 'Puede que tenga pedidos o reseñas asociadas.' })
     });
   }
 

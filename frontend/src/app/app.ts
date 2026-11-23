@@ -3,6 +3,8 @@ import { RouterOutlet, Router, NavigationEnd, Event } from '@angular/router'
 import { Header } from './layout/header/header'
 import { Footer } from './layout/footer/footer'
 import { AiChatComponent } from './layout/ai-chat/ai-chat.component'
+import { ToastContainer } from './layout/toast-container/toast-container'
+import { ConfirmDialog } from './layout/confirm-dialog/confirm-dialog'
 import { CommonModule } from '@angular/common'
 import { filter } from 'rxjs/operators'
 import { Subscription } from 'rxjs'
@@ -10,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, AiChatComponent, CommonModule, TranslateModule],
+  imports: [RouterOutlet, Header, Footer, AiChatComponent, ToastContainer, ConfirmDialog, CommonModule, TranslateModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

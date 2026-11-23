@@ -1,7 +1,8 @@
+import { ConfirmDialogService } from '../../core/services/confirm-dialog.service';
 import { Component, signal } from '@angular/core'
-import { OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../core/services/user';
@@ -12,16 +13,19 @@ import { environment } from '../../../environments/environments';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, CommonModule, TranslateModule],
+  imports: [RouterLinkActive, RouterLink, CommonModule, TranslateModule],
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
 export class Header implements OnInit, OnDestroy {
+  private confirmDialog = inject(ConfirmDialogService);
+  private router = inject(Router);
+  protected searchTerm = '';
+
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   isMobileMenuOpen: boolean = false;
   user: UserDTO = new UserDTO();
-  showLogoutConfirm: boolean = false;
   cartCount: number = 0;
   get currentLang(): string {
     return this.translate.currentLang || 'es';
@@ -42,6 +46,12 @@ export class Header implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.router.events.subscribe(e => {
+      if (e instanceof NavigationEnd) {
+        const url = this.router.parseUrl(e.urlAfterRedirects);
+        this.searchTerm = e.urlAfterRedirects.startsWith('/buscar') ? (url.queryParams['q'] ?? '') : '';
+      }
+    });
     this.subscription = this.authService.isLoggedIn().subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn;
       if (loggedIn) {
@@ -58,8 +68,7 @@ export class Header implements OnInit, OnDestroy {
   }
 
   checkAdminRole() {
-    const role = this.authService.getRole();
-    this.isAdmin = role === 'ROLE_ADMIN';
+    this.isAdmin = this.authService.isAdmin();
   }
 
   ngAfterViewInit() {
@@ -91,19 +100,25 @@ export class Header implements OnInit, OnDestroy {
     }
   }
 
-  openLogoutConfirm() {
-    this.showLogoutConfirm = true;
-    this.cdr.detectChanges();
+  async openLogoutConfirm() {
+    const ok = await this.confirmDialog.confirm({
+      title: this.translate.instant('HEADER.LOGOUT_CONFIRM_TITLE'),
+      message: this.translate.instant('HEADER.LOGOUT_CONFIRM_MSG'),
+      confirmText: this.translate.instant('HEADER.LOGOUT'),
+      cancelText: this.translate.instant('COMMON.CANCEL'),
+    });
+    if (ok) {
+      this.authService.logout();
+      this.cdr.detectChanges();
+    }
   }
 
-  cancelLogout() {
-    this.showLogoutConfirm = false;
-    this.cdr.detectChanges();
-  }
-
-  confirmLogout() {
-    this.showLogoutConfirm = false;
-    this.authService.logout();
-    this.cdr.detectChanges();
+  /** Buscador global de la cabecera. */
+  search(term: string) {
+    const q = term.trim();
+    if (!q) return;
+    this.searchTerm = q;
+    this.menuOpen.set(false);
+    this.router.navigate(['/buscar'], { queryParams: { q } });
   }
 }

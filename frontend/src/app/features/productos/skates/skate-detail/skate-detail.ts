@@ -1,3 +1,4 @@
+import { PricePipe } from '../../../../shared/pipes/price.pipe';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -5,13 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { SkateService } from '../../../../core/services/skate.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { CreateRatingRequest, ProductRatingSummary, SkateDTO, RatingDTO } from '../../../../models/types';
-import { CartService } from '../../../../core/services/cart.service';
+import { CartFeedbackService } from '../../../../core/services/cart-feedback.service';
 import { RatingService } from '../../../../core/services/rating.service';
 
 @Component({
   selector: 'app-skate-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, TranslateModule],
+  imports: [PricePipe, CommonModule, RouterModule, FormsModule, TranslateModule],
   templateUrl: './skate-detail.html',
   styleUrls: ['./skate-detail.css']
 })
@@ -34,7 +35,7 @@ export class SkateDetail implements OnInit {
     private router: Router,
     private skateService: SkateService,
     private ratingService: RatingService,
-    private cartService: CartService
+    private cartFeedback: CartFeedbackService
   ) {}
 
   ngOnInit(): void {
@@ -102,6 +103,14 @@ export class SkateDetail implements OnInit {
       });
   }
 
+  get isLoggedIn(): boolean {
+    return !!localStorage.getItem('gogaming_token') && localStorage.getItem('twofactor') === 'false';
+  }
+
+  rememberReturn(): void {
+    sessionStorage.setItem('gogaming_return_url', this.router.url);
+  }
+
   canSubmitReview(): boolean {
     return this.formRating >= 1 && this.formRating <= 5;
   }
@@ -149,8 +158,7 @@ export class SkateDetail implements OnInit {
 
   addToCart(): void {
     if (this.skate) {
-      this.cartService.addToCart(this.skate);
-      alert('Skate añadido correctamente al carrito.');
+      this.cartFeedback.add(this.skate);
     }
   }
 }

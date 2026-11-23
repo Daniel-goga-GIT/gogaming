@@ -24,7 +24,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 
 1. **SEGURIDAD:** hay una API key de OpenRouter escrita en el código de `ai-chat.component.ts`, que se envía al navegador. Ya está revocada y quitada del código. Pendiente: mover la llamada a la IA al backend.
 2. `.env` y `.env.produc` tienen secretos reales (Stripe, Google, SMTP, JWT). Ya se han añadido al `.gitignore`. Los repositorios originales son **públicos**, así que hay que cambiar todas las claves. Borrarlas del repositorio no basta, porque siguen en el historial.
-3. Todo el catálogo exige login (`authGuardLogin`). En una tienda, el catálogo debería ser público.
+3. ~~El catálogo exigía login~~ → ya es público; el login se pide solo al pagar, al escribir reseñas y en el perfil.
 4. Hay mucho código repetido: un controller, servicio, repositorio, mapper, DTO, servicio Angular y componente por cada categoría.
 5. `pom.xml`: dependencias duplicadas (mariadb, security), Thymeleaf sin usar, `data-jdbc` junto a JPA, `annotations:RELEASE`. El artifact se llama `ticket-logger-api`.
 6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
@@ -51,3 +51,15 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 3. Frontend: `cd frontend && npm start` → http://localhost:4200 (API en `src/environments/environments.ts`).
 - Keystore JWT: `backend/storage/certs/jwt.jks` (fuera de git; si se pierde, regenerarlo con keytool, alias `jwt-keypair`).
 - Endpoints públicos de productos: `/api/v1/productos/home`, `/api/v1/productos/<categoria>[/{id}]`.
+
+## Convenciones de UI (frontend)
+
+- **Nunca `alert()`/`confirm()`**: usar `NotificationService` (toasts: success/error/warning/info, con imagen y acción opcionales) y `ConfirmDialogService.confirm({...})` (devuelve `Promise<boolean>`, `variant: 'danger'` para borrar). Los dos se montan una sola vez en `app.html`.
+- Añadir a la cesta desde las fichas → `CartFeedbackService.add(producto)`, que respeta el stock y muestra el aviso adecuado.
+- Tarjetas de producto → `shared/product-card` (home, listados y buscador). Precios → pipe `price` (`1.299,99 €`).
+- Todos los textos visibles van en `assets/i18n/es.json` y `en.json`, nunca escritos en la plantilla. Categorías: `CATEGORY.<tipoProducto>`.
+- Enlaces internos con `routerLink`, nunca `href`, porque `href` recarga toda la app.
+- Buscador global: `/buscar?q=` (busca por nombre o marca en las 6 categorías).
+- Las peticiones solo llevan `Authorization` si hay token (`Bearer null` rompe los endpoints públicos).
+- Roles: `AuthService.isAdmin()` / `hasRole()` (el JWT puede tener varios roles).
+- Revisión visual: script de Playwright con el Chrome del sistema (capturas en escritorio 1366 y móvil 390; usuario QA admin `danielgongar8+qa@gmail.com`, código 2FA leído de la tabla `usuarios.code`).

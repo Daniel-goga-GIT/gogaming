@@ -28,32 +28,32 @@ export class AuricularesService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getAuricularesById(id: number): Observable<AuricularesDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<AuricularesDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createAuriculares(auriculares: AuricularesDTO): Observable<AuricularesDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<AuricularesDTO>(this.apiUrl, auriculares, { headers });
   }
 
   updateAuriculares(id: number, auriculares: AuricularesDTO): Observable<AuricularesDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<AuricularesDTO>(`${this.apiUrl}/${id}`, auriculares, { headers });
   }
 
   deleteAuriculares(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

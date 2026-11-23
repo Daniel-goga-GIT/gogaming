@@ -27,11 +27,11 @@
   "HOME": {
     "HERO_TITLE": "¡Ofertas!",
     "HERO_SUBTITLE": "Precios de escándalo por tiempo limitado",
-    "BUY_NOW": "Comprar Ya",
+    "BUY_NOW": "Ver ofertas",
     "FEATURED_PRODUCTS_TITLE": "Descubre los productos más destacados",
     "FEATURED_BADGE": "Destacados",
     "SOLD_OUT_BADGE": "Agotado",
-    "FREE_SHIPPING": "Envío gratis. Entrega mañana",
+    "FREE_SHIPPING": "Envío gratis · Entrega en 24 h",
     "OPINIONS": "opiniones",
     "FEATURED_PRODUCTS": "Productos Destacados"
   },
@@ -47,7 +47,9 @@
     "CONTACT_HELP": "Contacto y Ayuda",
     "RETURNS_GUARANTEES": "Devoluciones y Garantías",
     "COMMUNITY": "Redes",
-    "RIGHTS_RESERVED": "Todos los derechos reservados."
+    "RIGHTS_RESERVED": "Todos los derechos reservados.",
+    "PROJECT": "Proyecto",
+    "SOURCE_CODE": "Código en GitHub"
   },
   "PROFILE": {
     "CHANGE_PHOTO": "Cambiar foto",
@@ -55,21 +57,21 @@
     "EMAIL": "Email",
     "FIRST_NAME": "Nombre",
     "LAST_NAME": "Apellido",
-    "ORDERS_TITLE": "Historial de Pedidos",
+    "ORDERS_TITLE": "Historial de pedidos",
     "ORDERS_LOADING": "Cargando pedidos...",
-    "ORDERS_EMPTY": "Aun no tienes pedidos",
-    "ORDERS_EMPTY_MSG": "Cuando completes tu primera compra, aqui veras el historial con productos, importes y estado del pedido.",
-    "VIEW_CATALOG": "Ver catalogo",
+    "ORDERS_EMPTY": "Aún no tienes pedidos",
+    "ORDERS_EMPTY_MSG": "Cuando completes tu primera compra, aquí verás el historial con productos, importes y estado del pedido.",
+    "VIEW_CATALOG": "Ver catálogo",
     "ORDER_NUMBER": "Pedido #",
     "ORDER_COMPLETED": "Completado",
     "ORDER_PENDING": "Pendiente",
     "REVIEWS_TITLE": "Mis reseñas",
     "REVIEWS_LOADING": "Cargando reseñas...",
-    "REVIEWS_EMPTY": "Aun no has escrito reseñas",
+    "REVIEWS_EMPTY": "Aún no has escrito reseñas",
     "REVIEWS_EMPTY_MSG": "Cuando publiques una reseña, aparecerá aquí con acceso directo al producto."
   },
   "CART": {
-    "TITLE": "Mi Cesta",
+    "TITLE": "Mi cesta",
     "EMPTY_TITLE": "Tu cesta está vacía",
     "EMPTY_MSG": "¡Vaya! Parece que aún no has añadido ningún producto a tu cesta. Explora nuestro catálogo y encuentra lo que buscas.",
     "START_SHOPPING": "Empezar a comprar",
@@ -85,11 +87,11 @@
     "SHIPPING": "Envío estimado",
     "FREE": "Gratis",
     "TOTAL": "Total",
-    "CHECKOUT": "Tramitar Pedido",
-    "SECURE_PAYMENT": "Pago 100% Seguro y Encriptado"
+    "CHECKOUT": "Tramitar pedido",
+    "SECURE_PAYMENT": "Pago 100 % seguro y cifrado"
   },
   "PAYMENT": {
-    "TITLE": "Detalles de Pago",
+    "TITLE": "Detalles de pago",
     "MSG": "Introduce los datos de tu tarjeta para completar el pedido de",
     "CARD_NAME": "Nombre en la tarjeta",
     "CARD_NUMBER": "Número de tarjeta",
@@ -98,8 +100,8 @@
     "PAY_BUTTON": "Pagar",
     "PROCESSING": "Procesando pago...",
     "PROCESSING_MSG": "Por favor, no cierres esta ventana ni refresques la página.",
-    "SUCCESS_TITLE": "¡Pago Completado!",
-    "SUCCESS_MSG": "Tu pedido ha sido procesado con éxito. Gracias por confiar en GOGAMING.",
+    "SUCCESS_TITLE": "¡Pago completado!",
+    "SUCCESS_MSG": "Tu pedido se ha procesado correctamente. Gracias por confiar en GoGaming.",
     "SUCCESS_CONF_TITLE": "Confirmación enviada",
     "SUCCESS_CONF_MSG": "Revisa tu correo electrónico para ver los detalles.",
     "SUCCESS_BACK": "Volver",
@@ -107,11 +109,11 @@
   },
   "LOGIN": {
     "FEATURES_MANAGE_ORDERS": "Gestiona tus pedidos",
-    "FEATURES_MANAGE_ORDERS_MSG": "Ten el control de todos tus pedidos y recibe notificaciones con el seguimiento",
-    "FEATURES_WISHLIST": "Lista de deseos personalizada",
-    "FEATURES_WISHLIST_MSG": "Guarda tus productos favoritos en las listas de deseos personalizadas",
+    "FEATURES_MANAGE_ORDERS_MSG": "Consulta el historial y el estado de tus pedidos y recibe la confirmación por email",
+    "FEATURES_WISHLIST": "Opina y valora",
+    "FEATURES_WISHLIST_MSG": "Comparte tu experiencia con cada producto y ayuda a otros jugadores a elegir",
     "TITLE": "Iniciar sesión",
-    "ALREADY_LOGGED": "Ya estás logueado,",
+    "ALREADY_LOGGED": "Ya has iniciado sesión,",
     "EMAIL_PLACEHOLDER": "E-mail*",
     "EMAIL_ERROR": "Por favor, introduce un email válido.",
     "PASSWORD_PLACEHOLDER": "Contraseña*",
@@ -122,7 +124,7 @@
     "GOOGLE": "Iniciar sesión con Google",
     "NEW_CUSTOMER": "¿Eres nuevo cliente?",
     "CREATE_ACCOUNT": "Crear cuenta",
-    "ERROR_INVALID": "Usuario y contraseña inválido o la cuenta no está registrada."
+    "ERROR_INVALID": "El email o la contraseña no son correctos."
   },
   "REGISTER": {
     "TITLE": "Crear cuenta",
@@ -139,8 +141,8 @@
     "BUTTON": "Crear cuenta",
     "ALREADY_HAVE_ACCOUNT": "¿Ya tienes una cuenta?",
     "LOGIN_HERE": "Inicia sesión aquí",
-    "BENEFITS_WISHLIST_TITLE": "Lista de deseos personalizada",
-    "BENEFITS_WISHLIST_MSG": "Guarda tus productos favoritos en listas de deseos personalizadas.",
+    "BENEFITS_WISHLIST_TITLE": "Opina y valora",
+    "BENEFITS_WISHLIST_MSG": "Publica reseñas de los productos que has probado.",
     "BENEFITS_FASTER_TITLE": "Pedidos más rápidos",
     "BENEFITS_FASTER_MSG": "Almacena tus datos y compra en menos pasos.",
     "BENEFITS_PROFILE_TITLE": "Perfil personalizado",
@@ -189,14 +191,19 @@
     "RETURNS_ITEM4": "Contáctanos para gestionar cualquier devolución o cambio."
   },
   "ERRORS": {
-    "FORBIDDEN_TITLE": "Acceso Prohibido",
+    "FORBIDDEN_TITLE": "Acceso denegado",
     "FORBIDDEN_MSG": "¡Alto ahí! No tienes los permisos necesarios para acceder a esta zona restringida.",
-    "FORBIDDEN_BACK_HOME": "Volver al Inicio",
-    "NOT_FOUND_TITLE": "Página No Encontrada",
+    "FORBIDDEN_BACK_HOME": "Volver al inicio",
+    "NOT_FOUND_TITLE": "Página no encontrada",
     "NOT_FOUND_MSG": "¡Ups! Parece que te has perdido en el mapa. La página que buscas no existe o ha sido movida."
   },
   "PRODUCTS": {
-    "RATONES_TITLE": "Ratones"
+    "RATONES_TITLE": "Ratones gaming",
+    "TECLADOS_TITLE": "Teclados gaming",
+    "SKATES_TITLE": "Skates para ratón",
+    "ALFOMBRILLAS_TITLE": "Alfombrillas gaming",
+    "AURICULARES_TITLE": "IEM y cascos gaming",
+    "MANGAS_TITLE": "Mangas gaming"
   },
   "RATINGS": {
     "SECTION_TITLE": "Opiniones y valoraciones",
@@ -206,6 +213,63 @@
     "PUBLISH": "Publicar reseña",
     "EMPTY": "Todavía no hay reseñas para este producto.",
     "PREV": "Anterior",
-    "NEXT": "Siguiente"
+    "NEXT": "Siguiente",
+    "LOGIN_TO_REVIEW": "Inicia sesión para escribir una reseña."
+  },
+  "NOTIFY": {
+    "CART_ADDED": "Añadido a la cesta",
+    "CART_ADDED_QTY": "{{name}} · {{quantity}} uds. en tu cesta",
+    "VIEW_CART": "Ver cesta",
+    "OUT_OF_STOCK": "Producto agotado",
+    "OUT_OF_STOCK_MSG": "{{name}} no tiene unidades disponibles ahora mismo.",
+    "STOCK_LIMIT": "No quedan más unidades",
+    "STOCK_LIMIT_MSG": "Solo hay {{available}} disponibles y ya están todas en tu cesta.",
+    "COMING_SOON": "Próximamente",
+    "PDF_SOON_MSG": "La descarga de facturas en PDF estará disponible muy pronto.",
+    "LOGIN_TO_CHECKOUT": "Inicia sesión para finalizar la compra",
+    "LOGIN_TO_CHECKOUT_MSG": "Tu cesta se guarda; volverás aquí al entrar."
+  },
+  "PRODUCT": {
+    "FEATURED": "Destacado",
+    "SOLD_OUT": "Agotado",
+    "LOW_STOCK": "Quedan {{count}}",
+    "NO_REVIEWS": "Sin opiniones todavía",
+    "REVIEWS_COUNT": "{{count}} opiniones",
+    "FREE_SHIPPING": "Envío gratis en 24 h",
+    "VAT_INCLUDED": "IVA incluido",
+    "ADD_TO_CART": "Añadir a la cesta",
+    "NO_REVIEWS_CTA": "Sin opiniones todavía · ¡sé el primero!"
+  },
+  "LIST": {
+    "SEARCH_PLACEHOLDER": "Buscar por nombre o marca…",
+    "SORT_NAME": "Ordenar por nombre",
+    "SORT_PRICE": "Ordenar por precio",
+    "SORT_BRAND": "Ordenar por marca",
+    "SORT_STOCK": "Ordenar por disponibilidad",
+    "OF": "de",
+    "SHOWING": "Mostrando {{count}} de {{total}} productos",
+    "PREV": "Página anterior",
+    "NEXT": "Página siguiente"
+  },
+  "CATEGORY": {
+    "Raton": "Ratón",
+    "Teclado": "Teclado",
+    "Skate": "Skates",
+    "Alfombrilla": "Alfombrilla",
+    "Auriculares": "Auriculares",
+    "Manga": "Manga gaming"
+  },
+  "STOCK": {
+    "IN_STOCK": "En stock",
+    "LAST_UNITS": "¡Últimas {{count}} unidades!",
+    "SOLD_OUT": "Agotado"
+  },
+  "SEARCH": {
+    "TITLE": "Buscar productos",
+    "RESULTS_FOR": "Resultados para",
+    "COUNT": "{{count}} productos encontrados",
+    "EMPTY_TITLE": "No hemos encontrado nada",
+    "EMPTY_MSG": "Prueba con otra palabra o con el nombre de una marca (Logitech, Razer, Wooting…).",
+    "ERROR": "No se ha podido completar la búsqueda. Inténtalo de nuevo."
   }
 }

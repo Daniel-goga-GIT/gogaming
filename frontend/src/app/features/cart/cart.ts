@@ -1,21 +1,28 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../core/services/auth';
+import { NotificationService } from '../../core/services/notification.service';
+import { PricePipe } from '../../shared/pipes/price.pipe';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
 import { TicketService } from '../../core/services/ticket.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CartItem, CreateCheckoutRequest } from '../../models/types';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [PricePipe, CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css'
 })
 export class Cart implements OnInit, OnDestroy {
+  private authService = inject(AuthService);
+  private notify = inject(NotificationService);
+  private translate = inject(TranslateService);
+
   cartItems: CartItem[] = []; // Array local para mostrar los items en la vista
   stockErrors: { [key: number]: string } = {}; // Mapa para controlar errores de stock por producto
   paymentError = '';
@@ -145,6 +152,14 @@ export class Cart implements OnInit, OnDestroy {
 
   completarpago() {
     if (this.isProcessingPayment || !this.hasItems) {
+      return;
+    }
+    if (!this.authService.getToken() || localStorage.getItem('twofactor') !== 'false') {
+      sessionStorage.setItem('gogaming_return_url', '/cesta');
+      this.notify.info(this.translate.instant('NOTIFY.LOGIN_TO_CHECKOUT'), {
+        message: this.translate.instant('NOTIFY.LOGIN_TO_CHECKOUT_MSG'),
+      });
+      this.router.navigate(['/login']);
       return;
     }
     this.showPaymentModal = true;

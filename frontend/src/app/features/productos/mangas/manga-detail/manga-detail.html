@@ -4,14 +4,14 @@
     <nav class="flex mb-8 text-sm text-gray-500" aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <li class="inline-flex items-center">
-          <a [routerLink]="['/']" class="hover:text-red-600">Inicio</a>
+          <a [routerLink]="['/']" class="hover:text-red-600">{{ 'MENU.HOME' | translate }}</a>
         </li>
         <li>
           <div class="flex items-center">
             <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
             </svg>
-            <a [routerLink]="['/mangas']" class="hover:text-red-600">Mangas</a>
+            <a [routerLink]="['/mangas']" class="hover:text-red-600">{{ 'PRODUCTS.MANGAS_TITLE' | translate }}</a>
           </div>
         </li>
         <li aria-current="page" *ngIf="manga">
@@ -41,15 +41,15 @@
           <span class="text-red-600 font-bold uppercase tracking-wider text-sm">{{ manga.marca }}</span>
           <h1 class="text-3xl md:text-4xl font-bold mt-2 text-gray-900">{{ manga.nombre }}</h1>
           <div class="flex items-center gap-2 mt-3 text-sm text-gray-700">
-            <span class="font-bold text-gray-900">{{ getRating() }}</span>
-            <div class="flex items-center gap-0.5">
+            <span *ngIf="summary?.totalReviews" class="font-bold text-gray-900">{{ getRating() }}</span>
+            <div *ngIf="summary?.totalReviews" class="flex items-center gap-0.5">
               <svg *ngFor="let star of getStarsArray()" class="w-4 h-4"
                 [ngClass]="getRatingValue() >= star ? 'text-yellow-500' : 'text-gray-300'"
                 fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
               </svg>
             </div>
-            <span class="text-gray-500">{{ summary?.totalReviews ?? 0 }} {{ 'HOME.OPINIONS' | translate }}</span>
+            <span class="text-gray-500">{{ (summary?.totalReviews ? 'PRODUCT.REVIEWS_COUNT' : 'PRODUCT.NO_REVIEWS_CTA') | translate: { count: summary?.totalReviews } }}</span>
           </div>
           <div class="flex items-center gap-4 mt-4">
             <div class="flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider"
@@ -72,7 +72,7 @@
                     'bg-red-600': manga.stock <= 0
                   }"></span>
               </span>
-              <span>{{ getStock(manga.stock) }}</span>
+              <span>{{ (manga.stock > 10 ? 'STOCK.IN_STOCK' : manga.stock > 0 ? 'STOCK.LAST_UNITS' : 'STOCK.SOLD_OUT') | translate: { count: manga.stock } }}</span>
             </div>
           </div>
         </div>
@@ -101,8 +101,8 @@
 
         <div class="bg-gray-50 rounded-xl p-5 mt-8 border border-gray-100">
           <div class="flex items-end gap-2 mb-3">
-            <span class="text-2xl font-bold text-gray-900">{{ manga.precio }} €</span>
-            <span class="text-green-600 text-xs font-semibold mb-1">IVA incluido</span>
+            <span class="text-2xl font-bold text-gray-900">{{ manga.precio | price }}</span>
+            <span class="text-green-600 text-xs font-semibold mb-1">{{ 'PRODUCT.VAT_INCLUDED' | translate }}</span>
           </div>
           <div class="flex items-center gap-2 text-green-700 text-xs mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
@@ -113,7 +113,7 @@
           </div>
           <button (click)="addToCart()" [disabled]="manga.stock <= 0"
             class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl shadow-lg transition-all transform active:scale-[0.98] disabled:bg-gray-400 disabled:shadow-none text-sm">
-            {{ manga.stock > 0 ? 'AÑADIR A LA CESTA' : 'SIN STOCK' }}
+            {{ (manga.stock > 0 ? 'PRODUCT.ADD_TO_CART' : 'PRODUCT.SOLD_OUT') | translate }}
           </button>
         </div>
       </div>
@@ -126,7 +126,11 @@
       <div *ngIf="reviewError" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4">{{ reviewError }}</div>
       <div *ngIf="reviewSuccess" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">{{ reviewSuccess }}</div>
       <div class="space-y-5">
-        <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+        <div *ngIf="!isLoggedIn" class="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-5 text-sm text-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <span>{{ 'RATINGS.LOGIN_TO_REVIEW' | translate }}</span>
+            <a routerLink="/login" (click)="rememberReturn()" class="inline-flex justify-center rounded-lg bg-[#111111] px-4 py-2 font-semibold text-white hover:bg-gray-800">{{ 'HEADER.LOGIN' | translate }}</a>
+          </div>
+          <div *ngIf="isLoggedIn" class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
           <h3 class="text-base font-bold text-gray-900 mb-3">{{ 'RATINGS.WRITE_REVIEW' | translate }}</h3>
           <div class="flex items-center gap-2 mb-3">
             <label class="text-sm text-gray-600">{{ 'RATINGS.YOUR_SCORE' | translate }}</label>

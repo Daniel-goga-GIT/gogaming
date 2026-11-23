@@ -28,32 +28,32 @@ export class MangaService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getMangaById(id: number): Observable<MangaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<MangaDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createManga(manga: MangaDTO): Observable<MangaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<MangaDTO>(this.apiUrl, manga, { headers });
   }
 
   updateManga(id: number, manga: MangaDTO): Observable<MangaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<MangaDTO>(`${this.apiUrl}/${id}`, manga, { headers });
   }
 
   deleteManga(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

@@ -1,3 +1,4 @@
+import { ProductCard } from '../../shared/product-card/product-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -8,7 +9,7 @@ import { RatingService } from '../../core/services/rating.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterModule, TranslateModule],
+  imports: [ProductCard, CommonModule, RouterModule, TranslateModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

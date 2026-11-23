@@ -91,17 +91,31 @@ export class AuthService {
     return null;
   }
   
-  getRole(): string | null {
+  /** Todos los roles del usuario según el JWT (p. ej. ['ROLE_USER', 'ROLE_ADMIN']). */
+  getRoles(): string[] {
     const token = this.getToken();
-    if (!token) return null;
+    if (!token) return [];
 
     try {
       const decodedToken: any = jwtDecode(token);
-      return decodedToken.roles[0] || null;
-    } catch (error) {
-      console.error('Error al decodificar el token:', error);
-      return null;
+      return Array.isArray(decodedToken.roles) ? decodedToken.roles : [];
+    } catch {
+      return [];
     }
+  }
+
+  hasRole(role: string): boolean {
+    return this.getRoles().includes(role);
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('ROLE_ADMIN');
+  }
+
+  /** @deprecated Usar hasRole()/isAdmin(): un usuario puede tener varios roles. */
+  getRole(): string | null {
+    const roles = this.getRoles();
+    return roles.includes('ROLE_ADMIN') ? 'ROLE_ADMIN' : roles[0] ?? null;
   }
 
   getUserId(): number | null {

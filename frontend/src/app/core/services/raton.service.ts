@@ -28,32 +28,32 @@ export class RatonService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getRatonById(id: number): Observable<RatonDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<RatonDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createRaton(raton: RatonDTO): Observable<RatonDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<RatonDTO>(this.apiUrl, raton, { headers });
   }
 
   updateRaton(id: number, raton: RatonDTO): Observable<RatonDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<RatonDTO>(`${this.apiUrl}/${id}`, raton, { headers });
   }
 
   deleteRaton(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

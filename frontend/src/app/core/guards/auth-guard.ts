@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   // Verifica si el usuario está autenticado.
   const token = authService.getToken();
 
-  if (token && authService.getRole() === 'ROLE_ADMIN') {
+  if (token && localStorage.getItem('twofactor') === 'false' && authService.isAdmin()) {
     return true; 
   }
 

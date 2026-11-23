@@ -36,11 +36,11 @@
               
               <!-- Tipo de producto -->
               <div class="mt-2">
-                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{{ item.product.tipoProducto }}</span>
+                <span class="inline-block text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{{ ('CATEGORY.' + item.product.tipoProducto) | translate }}</span>
               </div>
             </div>
             <!-- Precio visible en móvil también -->
-            <p class="font-bold text-lg whitespace-nowrap">{{ item.product.precio | currency:'EUR' }}</p>
+            <p class="font-bold text-lg whitespace-nowrap">{{ item.product.precio | price }}</p>
           </div>
           
           <div class="flex flex-wrap items-center justify-between mt-4 gap-2">
@@ -78,7 +78,7 @@
         <div class="space-y-4 mb-8">
           <div class="flex justify-between text-gray-600">
             <span>{{ 'CART.SUBTOTAL' | translate }}</span>
-            <span class="font-medium">{{ total | currency:'EUR' }}</span>
+            <span class="font-medium">{{ total | price }}</span>
           </div>
           <div class="flex justify-between text-gray-600">
             <span>{{ 'CART.SHIPPING' | translate }}</span>
@@ -90,7 +90,7 @@
           <div class="flex justify-between items-end">
             <span class="text-lg font-semibold text-gray-900">{{ 'CART.TOTAL' | translate }}</span>
             <div class="text-right">
-              <span class="block text-3xl font-bold text-[#CC0000]">{{ total | currency:'EUR' }}</span>
+              <span class="block text-3xl font-bold text-[#CC0000]">{{ total | price }}</span>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p>{{ 'PAYMENT.MSG' | translate }} <span class="font-bold">{{ total | currency:'EUR' }}</span></p>
+            <p>{{ 'PAYMENT.MSG' | translate }} <span class="font-bold">{{ total | price }}</span></p>
           </div>
 
           <!-- Formulario de Tarjeta -->
@@ -172,7 +172,7 @@
           </div>
 
           <button (click)="confirmarPago()" class="w-full mt-6 py-4 bg-[#CC0000] text-white font-bold rounded-xl hover:bg-red-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-            {{ 'PAYMENT.PAY_BUTTON' | translate }} {{ total | currency:'EUR' }}
+            {{ 'PAYMENT.PAY_BUTTON' | translate }} {{ total | price }}
           </button>
         </div>
 

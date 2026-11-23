@@ -13,15 +13,16 @@
       </a>
 
       <div class="order-3 md:order-2 w-full md:w-auto md:flex-1 max-w-none md:max-w-xl flex items-center gap-3 mt-2 md:mt-0">
-        <div class="flex-1 relative w-full">
-          <input type="text" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate" class="w-full rounded-full bg-white text-gray-800 pl-5 pr-10 py-2 shadow-sm outline-none placeholder:text-gray-500" readonly />
-          <span class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5">
+        <form role="search" class="flex-1 relative w-full" (submit)="search(searchInput.value); $event.preventDefault()">
+          <label for="header-search" class="sr-only">{{ 'HEADER.SEARCH_PLACEHOLDER' | translate }}</label>
+          <input #searchInput id="header-search" type="search" name="q" [value]="searchTerm" autocomplete="off" enterkeyhint="search" [placeholder]="'HEADER.SEARCH_PLACEHOLDER' | translate" class="w-full rounded-full bg-white text-gray-800 pl-5 pr-11 py-2 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#CC0000]" />
+          <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-gray-600 hover:bg-gray-100 hover:text-[#CC0000] cursor-pointer" [attr.aria-label]="'HEADER.SEARCH_PLACEHOLDER' | translate">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5" aria-hidden="true">
               <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
               <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
-          </span>
-        </div>
+          </button>
+        </form>
 
         <button type="button" (click)="toggleMenu()" aria-expanded="{{menuOpen()}}" class="shrink-0 h-10 px-4 rounded-full bg-[#CC0000] text-white hover:bg-red-700 flex items-center gap-2 md:hidden cursor-pointer relative z-50">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5">
@@ -85,12 +86,12 @@
           </div>
 
           <div class="flex-shrink-0">
-            <button (click)="openLogoutConfirm()" class="md:hidden w-9 h-9 rounded-full bg-[#CC0000]/20 hover:bg-[#CC0000] text-white flex items-center justify-center transition-colors" title="Cerrar sesión">
+            <button (click)="openLogoutConfirm()" class="md:hidden w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors" [attr.aria-label]="'HEADER.LOGOUT' | translate">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="w-5 h-5">
                 <path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8m4-9l-4-4m4 4l-4 4m4-4H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <button (click)="openLogoutConfirm()" class="hidden md:flex items-center gap-2 px-4 py-2 rounded bg-[#C43414]/80 hover:bg-[#C43414] text-white font-bold text-sm transition-colors" title="Cerrar sesión">
+            <button (click)="openLogoutConfirm()" class="hidden md:flex items-center gap-2 px-4 py-2 rounded border border-white/30 hover:bg-white hover:text-black text-white font-bold text-sm transition-colors cursor-pointer" >
               {{ 'HEADER.LOGOUT' | translate }}
             </button>
           </div>
@@ -99,13 +100,20 @@
         <ng-template #authButtons>
           <a
             routerLink="/login"
-            class="flex justify-center items-center px-4 py-2 rounded bg-[#CC0000] hover:bg-red-700 text-sm font-bold text-center transition-colors"
+            class="sm:hidden w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center"
+            [attr.aria-label]="'HEADER.LOGIN' | translate"
+          >
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+          </a>
+          <a
+            routerLink="/login"
+            class="hidden sm:flex justify-center items-center px-4 py-2 rounded bg-[#CC0000] hover:bg-red-700 text-sm font-bold text-center transition-colors"
           >
             {{ 'HEADER.LOGIN' | translate }}
           </a>
           <a
             routerLink="/register"
-            class="flex justify-center items-center px-4 py-2 rounded border-2 border-white hover:bg-white hover:text-black text-sm font-bold text-center transition-colors"
+            class="hidden sm:flex justify-center items-center px-4 py-2 rounded border-2 border-white hover:bg-white hover:text-black text-sm font-bold text-center transition-colors"
           >
             {{ 'HEADER.REGISTER' | translate }}
           </a>
@@ -118,13 +126,13 @@
   <nav class="hidden md:block bg-[#CC0000] text-white">
     <div class="max-w-6xl mx-auto px-4">
       <ul class="flex items-center justify-center gap-8 h-10 text-sm font-semibold">
-        <li><a href="/" class="hover:underline">{{ 'MENU.HOME' | translate }}</a></li>
-        <li><a href="/ratones" class="hover:underline">{{ 'MENU.GAMING_MOUSE' | translate }}</a></li>
-        <li><a href="/skates" class="hover:underline">{{ 'MENU.MOUSE_SKATES' | translate }}</a></li>
-        <li><a href="/teclados" class="hover:underline">{{ 'MENU.KEYBOARDS' | translate }}</a></li>
-        <li><a href="/alfombrillas" class="hover:underline">{{ 'MENU.MOUSEPADS' | translate }}</a></li>
-        <li><a href="/iem-cascos" class="hover:underline">{{ 'MENU.IEM_HEADPHONES' | translate }}</a></li>
-        <li><a href="/mangas" class="hover:underline">{{ 'MENU.GAMING_SLEEVES' | translate }}</a></li>
+        <li><a routerLink="/" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: true }" class="hover:underline underline-offset-4">{{ 'MENU.HOME' | translate }}</a></li>
+        <li><a routerLink="/ratones" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.GAMING_MOUSE' | translate }}</a></li>
+        <li><a routerLink="/skates" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.MOUSE_SKATES' | translate }}</a></li>
+        <li><a routerLink="/teclados" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.KEYBOARDS' | translate }}</a></li>
+        <li><a routerLink="/alfombrillas" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.MOUSEPADS' | translate }}</a></li>
+        <li><a routerLink="/iem-cascos" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.IEM_HEADPHONES' | translate }}</a></li>
+        <li><a routerLink="/mangas" routerLinkActive="!underline underline-offset-4 decoration-2" [routerLinkActiveOptions]="{ exact: false }" class="hover:underline underline-offset-4">{{ 'MENU.GAMING_SLEEVES' | translate }}</a></li>
       </ul>
     </div>
   </nav>
@@ -132,45 +140,18 @@
   <!-- Mobile Menu Overlay -->
   <div *ngIf="menuOpen()" class="md:hidden absolute top-full left-0 w-full bg-[#CC0000] text-white shadow-lg border-t border-red-800 z-40 animate-fade-in">
     <ul class="flex flex-col p-4 gap-4 text-sm font-semibold">
-      <li><a href="/" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.HOME' | translate }}</a></li>
+      <li><a routerLink="/" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.HOME' | translate }}</a></li>
       <li *ngIf="isAdmin">
         <a routerLink="/dashboard" class="block hover:underline text-yellow-400" (click)="toggleMenu()">
           {{ 'HEADER.DASHBOARD' | translate }}
         </a>
       </li>
-      <li><a href="/ratones" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.GAMING_MOUSE' | translate }}</a></li>
-      <li><a href="/skates" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.MOUSE_SKATES' | translate }}</a></li>
-      <li><a href="/teclados" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.KEYBOARDS' | translate }}</a></li>
-      <li><a href="/alfombrillas" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.MOUSEPADS' | translate }}</a></li>
-      <li><a href="/iem-cascos" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.IEM_HEADPHONES' | translate }}</a></li>
-      <li><a href="/mangas" class="block hover:underline" (click)="toggleMenu()">{{ 'MENU.GAMING_SLEEVES' | translate }}</a></li>
+      <li><a routerLink="/ratones" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.GAMING_MOUSE' | translate }}</a></li>
+      <li><a routerLink="/skates" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.MOUSE_SKATES' | translate }}</a></li>
+      <li><a routerLink="/teclados" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.KEYBOARDS' | translate }}</a></li>
+      <li><a routerLink="/alfombrillas" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.MOUSEPADS' | translate }}</a></li>
+      <li><a routerLink="/iem-cascos" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.IEM_HEADPHONES' | translate }}</a></li>
+      <li><a routerLink="/mangas" class="block py-1 hover:underline" (click)="toggleMenu()">{{ 'MENU.GAMING_SLEEVES' | translate }}</a></li>
     </ul>
-  </div>
-
-  <div *ngIf="showLogoutConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-    <div class="w-full max-w-sm md:max-w-md bg-[#111111] text-white rounded-xl shadow-2xl">
-      <div class="px-6 py-4 border-b border-white/10">
-        <h3 class="text-lg font-semibold">{{ 'HEADER.LOGOUT_CONFIRM_TITLE' | translate }}</h3>
-        <p class="mt-1 text-sm text-gray-300">
-          {{ 'HEADER.LOGOUT_CONFIRM_MSG' | translate }}
-        </p>
-      </div>
-      <div class="px-6 py-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <button
-          type="button"
-          (click)="cancelLogout()"
-          class="w-full sm:w-auto px-4 py-2 rounded border border-gray-500 text-gray-100 font-medium hover:bg-white/5 transition-colors"
-        >
-          {{ 'COMMON.CANCEL' | translate }}
-        </button>
-        <button
-          type="button"
-          (click)="confirmLogout()"
-          class="w-full sm:w-auto px-4 py-2 rounded bg-[#CC0000] hover:bg-[#C43414] text-white font-semibold transition-colors"
-        >
-          {{ 'HEADER.LOGOUT' | translate }}
-        </button>
-      </div>
-    </div>
   </div>
 </header>

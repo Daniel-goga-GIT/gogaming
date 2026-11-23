@@ -1,3 +1,4 @@
+import { ProductCard } from '../../../shared/product-card/product-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TecladoService } from '../../../core/services/teclado.service';
@@ -10,7 +11,7 @@ import { ProductRatingSummary } from '../../../models/types';
 @Component({
   selector: 'app-teclados',
   standalone: true,
-  imports: [
+  imports: [ProductCard, 
     CommonModule,
     FormsModule,
     RouterModule,

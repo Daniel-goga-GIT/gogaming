@@ -28,32 +28,32 @@ export class TecladoService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getTecladoById(id: number): Observable<TecladoDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<TecladoDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createTeclado(teclado: TecladoDTO): Observable<TecladoDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<TecladoDTO>(this.apiUrl, teclado, { headers });
   }
 
   updateTeclado(id: number, teclado: TecladoDTO): Observable<TecladoDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<TecladoDTO>(`${this.apiUrl}/${id}`, teclado, { headers });
   }
 
   deleteTeclado(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

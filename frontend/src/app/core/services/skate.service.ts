@@ -28,32 +28,32 @@ export class SkateService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getSkateById(id: number): Observable<SkateDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<SkateDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createSkate(skate: SkateDTO): Observable<SkateDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<SkateDTO>(this.apiUrl, skate, { headers });
   }
 
   updateSkate(id: number, skate: SkateDTO): Observable<SkateDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<SkateDTO>(`${this.apiUrl}/${id}`, skate, { headers });
   }
 
   deleteSkate(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

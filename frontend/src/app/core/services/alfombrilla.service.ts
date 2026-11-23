@@ -28,32 +28,32 @@ export class AlfombrillaService {
       params = params.set('nombre', nombre);
     }
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
 
     return this.http.get<any>(this.apiUrl, { params, headers });
   }
 
   getAlfombrillaById(id: number): Observable<AlfombrillaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.get<AlfombrillaDTO>(`${this.apiUrl}/${id}`, { headers });
   }
 
   createAlfombrilla(alfombrilla: AlfombrillaDTO): Observable<AlfombrillaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.post<AlfombrillaDTO>(this.apiUrl, alfombrilla, { headers });
   }
 
   updateAlfombrilla(id: number, alfombrilla: AlfombrillaDTO): Observable<AlfombrillaDTO> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.put<AlfombrillaDTO>(`${this.apiUrl}/${id}`, alfombrilla, { headers });
   }
 
   deleteAlfombrilla(id: number): Observable<void> {
     const token = this.authService.getToken();
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
 }

@@ -54,7 +54,9 @@ export class Twofactor {
             next: (res) => {
                 localStorage.setItem("twofactor", "false");
                 this.authService.setToken(res.token);
-                this.router.navigate(['/']);
+                const returnUrl = sessionStorage.getItem('gogaming_return_url') || '/';
+                sessionStorage.removeItem('gogaming_return_url');
+                this.router.navigateByUrl(returnUrl);
             },
             error: (err) => {
                 this.error = 'Código de dos factores inválido.';

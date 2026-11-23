@@ -7,11 +7,15 @@ export const authGuardLogin: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const token = authService.getToken();
+  const goLogin = () => {
+    sessionStorage.setItem('gogaming_return_url', state.url);
+    return router.parseUrl('/login');
+  };
 
   // 1. Condición innegociable: ¿Existe el token?
   if (!token) {
     // Si no hay token, redirigimos al login (o raíz) de inmediato
-    return router.parseUrl('/login');
+    return goLogin();
   }
 
   const twofactor = localStorage.getItem('twofactor');
@@ -21,8 +25,8 @@ export const authGuardLogin: CanActivateFn = (route, state) => {
   }
 
   if (token && twofactor === 'true') {
-    return router.parseUrl('/login');
+    return goLogin();
   }
 
-  return router.parseUrl('/login');
+  return goLogin();
 };

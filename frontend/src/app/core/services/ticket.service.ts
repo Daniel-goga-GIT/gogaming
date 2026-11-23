@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { AuthService } from './auth';
@@ -25,7 +25,7 @@ export interface TicketResponse {
   lineas: LineaTicketResponse[];
 }
 
-import { CreateCheckoutRequest } from '../../models/types';
+import { CheckoutSessionResponse, CreateCheckoutRequest } from '../../models/types';
 
 @Injectable({
   providedIn: 'root'
@@ -66,16 +66,22 @@ export class TicketService {
     });
   }
 
-  createTicketFromCheckout(request: CreateCheckoutRequest): Observable<TicketResponse> {
+  /** Crea la sesión de pago de Stripe; hay que redirigir a `url`. */
+  createCheckoutSession(request: CreateCheckoutRequest): Observable<CheckoutSessionResponse> {
     const token = this.authService.getToken();
-    if (!token) {
-      return throwError(() => new Error('Unauthorized'));
-    }
-
-    return this.http.post<TicketResponse>(`${environment.apiUrl}/v1/payments/checkout-session`, request, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      })
+    if (!token) return throwError(() => new Error('Unauthorized'));
+    return this.http.post<CheckoutSessionResponse>(`${environment.apiUrl}/v1/payments/checkout-session`, request, {
+      headers: new HttpHeaders({ Authorization: `Bearer ${token}` })
     });
+  }
+
+  /** Confirma el pago al volver de Stripe. status 200 = pedido creado; 202 = pago aún pendiente. */
+  confirmCheckoutSession(sessionId: string): Observable<HttpResponse<TicketResponse | { status: string }>> {
+    const token = this.authService.getToken();
+    if (!token) return throwError(() => new Error('Unauthorized'));
+    return this.http.get<TicketResponse | { status: string }>(
+      `${environment.apiUrl}/v1/payments/checkout-session/${encodeURIComponent(sessionId)}`,
+      { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }), observe: 'response' }
+    );
   }
 }

@@ -130,8 +130,12 @@ CREATE TABLE IF NOT EXISTS tickets (
     total DECIMAL(10,2) NOT NULL,
     metodo_pago ENUM('Tarjeta', 'PayPal', 'Transferencia') NOT NULL,
     estado ENUM('Preparando', 'Enviado', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Preparando',
+    stripe_session_id VARCHAR(255) NULL UNIQUE,
     FOREIGN KEY (idusuario) REFERENCES usuarios(idusuario) ON DELETE SET NULL
 );
+
+-- Migración para BDs creadas antes de integrar Stripe
+ALTER TABLE tickets ADD COLUMN IF NOT EXISTS stripe_session_id VARCHAR(255) NULL UNIQUE;
 
 -- =========================
 -- LINEAS DE TICKET

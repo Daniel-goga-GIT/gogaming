@@ -105,7 +105,22 @@
     "SUCCESS_CONF_TITLE": "Confirmation sent",
     "SUCCESS_CONF_MSG": "Check your email for details.",
     "SUCCESS_BACK": "Back",
-    "SUCCESS_ORDERS": "My orders"
+    "SUCCESS_ORDERS": "My orders",
+    "REDIRECTING": "Opening secure checkout…",
+    "START_ERROR_TITLE": "Couldn't start the payment",
+    "START_ERROR": "Please try again in a few seconds.",
+    "CANCELLED_TITLE": "Payment cancelled",
+    "CANCELLED_MSG": "You haven't been charged. Your cart is still here.",
+    "TEST_MODE_HINT": "Stripe test mode · card 4242 4242 4242 4242, any future date and CVC",
+    "CONFIRMING": "Confirming your payment…",
+    "CONFIRMING_MSG": "We're checking the payment with Stripe. It only takes a few seconds.",
+    "PENDING_TITLE": "Your payment is processing",
+    "PENDING_MSG": "We'll email you once it's confirmed. You'll also see it under “My orders”.",
+    "ERROR_TITLE": "We couldn't confirm the payment",
+    "ERROR_MSG": "If you were charged, the order will show up in your profile in a few minutes.",
+    "ORDER_NUMBER": "Order number",
+    "ORDER_SUMMARY": "Order summary",
+    "UNITS": "{{count}} pcs"
   },
   "LOGIN": {
     "FEATURES_MANAGE_ORDERS": "Manage your orders",

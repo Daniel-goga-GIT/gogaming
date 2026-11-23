@@ -1,6 +1,5 @@
 package org.iesalixar.daw2.alejandromontero.ticket_logger_api.services;
 
-import org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos.CartItemRequestDTO;
 import org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos.LineaTicketResponseDTO;
 import org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos.TicketResponseDTO;
 import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.LineaTicket;
@@ -18,11 +17,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TicketService.class);
 
     private final TicketRepository ticketRepository;
     private final LineaTicketRepository lineaTicketRepository;
@@ -34,52 +34,58 @@ public class TicketService {
         this.productoRepository = productoRepository;
     }
 
-    public TicketResponseDTO createTicketFromCheckout(Long userId, List<CartItemRequestDTO> items, String metodoPago) {
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("La cesta esta vacia");
+    /** Línea pagada: producto, cantidad y precio unitario cobrado por Stripe. */
+    public record PaidLine(Long productId, int quantity, BigDecimal unitPrice) {}
+
+    public java.util.Optional<TicketResponseDTO> findByStripeSessionId(String sessionId) {
+        return ticketRepository.findByStripeSessionId(sessionId)
+                .map(t -> buildTicketResponse(t, lineaTicketRepository.findByTicketId(t.getId())));
+    }
+
+    /**
+     * Crea el pedido de una compra YA PAGADA en Stripe y descuenta el stock.
+     * Es transaccional: o se guarda todo o nada. La columna única stripe_session_id
+     * impide crear dos pedidos para el mismo pago (webhook + vuelta del cliente a la vez).
+     */
+    @Transactional
+    public TicketResponseDTO createPaidTicket(Long userId, List<PaidLine> paidLines, String stripeSessionId) {
+        if (paidLines == null || paidLines.isEmpty()) {
+            throw new IllegalArgumentException("El pago no contiene productos");
         }
 
-        String paymentMethod = normalizePaymentMethod(metodoPago);
-
         List<LineaTicket> lineas = new ArrayList<>();
-        BigDecimal subtotal = BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO;
 
-        for (CartItemRequestDTO item : items) {
-            if (item.getProductId() == null || item.getQuantity() == null || item.getQuantity() <= 0) {
-                throw new IllegalArgumentException("Item de cesta invalido");
+        for (PaidLine paid : paidLines) {
+            Producto product = productoRepository.findById(paid.productId())
+                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado: " + paid.productId()));
+
+            int stock = product.getStock() == null ? 0 : product.getStock();
+            if (stock < paid.quantity()) {
+                // Ya está cobrado: se registra igualmente y se deja el stock a 0 para revisión manual.
+                logger.warn("Stock insuficiente tras el pago {} (producto {}, stock {}, pedido {})",
+                        stripeSessionId, product.getId(), stock, paid.quantity());
             }
-
-            Producto product = productoRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado: " + item.getProductId()));
-
-            if (product.getStock() == null || product.getStock() < item.getQuantity()) {
-                throw new IllegalArgumentException("Stock insuficiente para el producto " + product.getNombre());
-            }
-
-            product.setStock(product.getStock() - item.getQuantity());
+            product.setStock(Math.max(0, stock - paid.quantity()));
             productoRepository.save(product);
-
-            BigDecimal lineSubtotal = product.getPrecio().multiply(BigDecimal.valueOf(item.getQuantity()));
-            subtotal = subtotal.add(lineSubtotal);
 
             LineaTicket linea = new LineaTicket();
             linea.setProductId(product.getId());
-            linea.setCantidad(item.getQuantity());
-            linea.setPrecioUnitario(product.getPrecio());
+            linea.setCantidad(paid.quantity());
+            linea.setPrecioUnitario(paid.unitPrice());
             lineas.add(linea);
+            total = total.add(paid.unitPrice().multiply(BigDecimal.valueOf(paid.quantity())));
         }
-
-        BigDecimal total = subtotal;
 
         Ticket ticket = new Ticket();
         ticket.setUserId(userId);
         ticket.setNumeroTicket(generateTicketNumber());
         ticket.setFecha(LocalDateTime.now());
         ticket.setTotal(total);
-        ticket.setMetodoPago(paymentMethod);
+        ticket.setMetodoPago("Tarjeta");
         ticket.setEstado("Preparando");
-
-        Ticket savedTicket = ticketRepository.save(ticket);
+        ticket.setStripeSessionId(stripeSessionId);
+        Ticket savedTicket = ticketRepository.saveAndFlush(ticket);
 
         lineas.forEach(linea -> linea.setTicketId(savedTicket.getId()));
         lineaTicketRepository.saveAll(lineas);
@@ -145,22 +151,16 @@ public class TicketService {
         );
     }
 
+    private static final String TICKET_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    private static final java.security.SecureRandom RANDOM = new java.security.SecureRandom();
+
+    /** Número de pedido legible y único, p. ej. GG-261123-7KQ2M (cabe en VARCHAR(20)). */
     private String generateTicketNumber() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        return "Ticket-" + LocalDateTime.now().format(formatter);
-    }
-
-    private String normalizePaymentMethod(String rawMethod) {
-        if (rawMethod == null || rawMethod.isBlank()) {
-            return "Tarjeta";
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
+        StringBuilder suffix = new StringBuilder(5);
+        for (int i = 0; i < 5; i++) {
+            suffix.append(TICKET_ALPHABET.charAt(RANDOM.nextInt(TICKET_ALPHABET.length())));
         }
-
-        String normalized = rawMethod.trim().toLowerCase(Locale.ROOT);
-        return switch (normalized) {
-            case "tarjeta" -> "Tarjeta";
-            case "paypal" -> "PayPal";
-            case "transferencia" -> "Transferencia";
-            default -> throw new IllegalArgumentException("Metodo de pago no valido: " + rawMethod);
-        };
+        return "GG-" + date + "-" + suffix;
     }
 }

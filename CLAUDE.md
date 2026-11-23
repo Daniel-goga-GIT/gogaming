@@ -7,7 +7,7 @@ Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Respo
 ## Estructura
 
 - `backend/`: Spring Boot 4.0.1, Java 21, Maven (`mvnw`), MariaDB (docker-compose), JPA.
-  Seguridad con JWT (keystore), 2FA por email, OAuth2 con Google, reseñas y Swagger (springdoc).
+  Seguridad con JWT (keystore), 2FA por email, OAuth2 con Google, pagos con Stripe Checkout, reseñas y Swagger (springdoc).
   Paquete base: `org.iesalixar.daw2.alejandromontero.ticket_logger_api` (viene de la plantilla de clase; se renombrará).
   Esquema y datos: `src/main/resources/schema.sql`, `data.sql`. Configuración por `.env` (dotenv-java).
 - `frontend/`: Angular 20 (standalone, SSR), Tailwind, ngx-translate (es/en), Karma/Jasmine.
@@ -28,7 +28,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 4. Hay mucho código repetido: un controller, servicio, repositorio, mapper, DTO, servicio Angular y componente por cada categoría.
 5. `pom.xml`: dependencias duplicadas (mariadb, security), Thymeleaf sin usar, `data-jdbc` junto a JPA, `annotations:RELEASE`. El artifact se llama `ticket-logger-api`.
 6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
-7. **Stripe no está integrado de verdad.** No hay SDK de Stripe en el `pom.xml`. `POST /api/v1/payments/checkout-session` crea el ticket sin cobrar, y las variables `STRIPE_*` no se usan. Pendiente: implementar Stripe Checkout en modo test con webhook. Hay una cuenta nueva de Stripe (Sandbox) solo para GoGaming.
+7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. Los tests son casi todos los generados por defecto. No hay README. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
 
 ## Estado de las claves (23 nov 2026)
@@ -63,3 +63,16 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Las peticiones solo llevan `Authorization` si hay token (`Bearer null` rompe los endpoints públicos).
 - Roles: `AuthService.isAdmin()` / `hasRole()` (el JWT puede tener varios roles).
 - Revisión visual: script de Playwright con el Chrome del sistema (capturas en escritorio 1366 y móvil 390; usuario QA admin `danielgongar8+qa@gmail.com`, código 2FA leído de la tabla `usuarios.code`).
+
+## Pagos con Stripe
+
+- `StripePaymentService` (stripe-java 34.2.0, `StripeClient`). Cuenta Stripe **Sandbox** solo para GoGaming (modo test).
+- `POST /api/v1/payments/checkout-session` → valida la cesta contra la BD (precio, stock, máx. 10 uds./línea y 25 líneas) y devuelve `{sessionId, url}`. El precio cobrado va en la metadata `cart` = `id x cantidad @ céntimos;…`.
+- El pedido (`Ticket`) se crea **solo cuando Stripe confirma el pago**, de dos maneras que conviven:
+  - `GET /api/v1/payments/checkout-session/{id}`: el cliente vuelve a `/pago-completado?session_id=…`. Devuelve 200 con el pedido, 202 si sigue pendiente (el frontend reintenta 8 veces) o 404/403.
+  - `POST /api/v1/payments/webhook`: público, validado con la firma `STRIPE_WEBHOOK_SECRET`. Atiende `checkout.session.completed` y `async_payment_succeeded`.
+  - Es idempotente gracias a la columna única `tickets.stripe_session_id`: si llegan las dos confirmaciones a la vez, se crea un solo pedido.
+- En local no hace falta el webhook (basta con la vuelta del cliente). Para probarlo: `stripe listen --forward-to localhost:8081/api/v1/payments/webhook` y copiar el `whsec_…` al `.env`.
+- Al desplegar: crear el endpoint del webhook en el Dashboard de Stripe con la URL pública y poner su secreto en las variables de entorno.
+- Tarjeta de prueba: `4242 4242 4242 4242`, cualquier fecha futura y CVC. Para probar el pago con 3D Secure: `4000 0027 6000 3184`.
+- Número de pedido: `GG-AAMMDD-XXXXX` (aleatorio; el anterior por segundos chocaba con la restricción UNIQUE).

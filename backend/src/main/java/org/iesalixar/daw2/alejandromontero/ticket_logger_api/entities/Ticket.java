@@ -39,4 +39,8 @@ public class Ticket {
 
     @Column(name = "estado", nullable = false)
     private String estado;
+
+    /** Id de la Checkout Session de Stripe que pagó este pedido (evita crear el pedido dos veces). */
+    @Column(name = "stripe_session_id", unique = true)
+    private String stripeSessionId;
 }

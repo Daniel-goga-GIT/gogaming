@@ -91,12 +91,12 @@ export interface CheckoutItemRequest {
 
 export interface CreateCheckoutRequest {
   items: CheckoutItemRequest[];
-  metodoPago: string;
 }
 
 export interface CheckoutSessionResponse {
   sessionId: string;
-  checkoutUrl: string;
+  /** URL de la página de pago de Stripe a la que redirigir. */
+  url: string;
 }
 
 export interface RatingDTO {

@@ -152,6 +152,11 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>34.2.0</version>
+        </dependency>
     </dependencies>
 
 	<build>

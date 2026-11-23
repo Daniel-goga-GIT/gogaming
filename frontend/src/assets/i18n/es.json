@@ -105,7 +105,22 @@
     "SUCCESS_CONF_TITLE": "Confirmación enviada",
     "SUCCESS_CONF_MSG": "Revisa tu correo electrónico para ver los detalles.",
     "SUCCESS_BACK": "Volver",
-    "SUCCESS_ORDERS": "Mis pedidos"
+    "SUCCESS_ORDERS": "Mis pedidos",
+    "REDIRECTING": "Abriendo pago seguro…",
+    "START_ERROR_TITLE": "No se ha podido iniciar el pago",
+    "START_ERROR": "Inténtalo de nuevo en unos segundos.",
+    "CANCELLED_TITLE": "Pago cancelado",
+    "CANCELLED_MSG": "No se ha cobrado nada. Tu cesta sigue aquí.",
+    "TEST_MODE_HINT": "Modo de pruebas de Stripe · tarjeta 4242 4242 4242 4242, cualquier fecha futura y CVC",
+    "CONFIRMING": "Confirmando tu pago…",
+    "CONFIRMING_MSG": "Estamos comprobando el pago con Stripe. Solo tarda unos segundos.",
+    "PENDING_TITLE": "Tu pago se está procesando",
+    "PENDING_MSG": "Te enviaremos un email en cuanto se confirme. También lo verás en «Mis pedidos».",
+    "ERROR_TITLE": "No hemos podido confirmar el pago",
+    "ERROR_MSG": "Si se ha realizado el cargo, el pedido aparecerá en tu perfil en unos minutos.",
+    "ORDER_NUMBER": "Número de pedido",
+    "ORDER_SUMMARY": "Resumen del pedido",
+    "UNITS": "{{count}} ud."
   },
   "LOGIN": {
     "FEATURES_MANAGE_ORDERS": "Gestiona tus pedidos",

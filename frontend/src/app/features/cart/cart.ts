@@ -3,7 +3,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { PricePipe } from '../../shared/pipes/price.pipe';
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../core/services/cart.service';
 import { TicketService } from '../../core/services/ticket.service';
@@ -22,19 +22,12 @@ export class Cart implements OnInit, OnDestroy {
   private authService = inject(AuthService);
   private notify = inject(NotificationService);
   private translate = inject(TranslateService);
+  private route = inject(ActivatedRoute);
 
   cartItems: CartItem[] = []; // Array local para mostrar los items en la vista
   stockErrors: { [key: number]: string } = {}; // Mapa para controlar errores de stock por producto
   paymentError = '';
   isProcessingPayment = false;
-  selectedPaymentMethod = 'Tarjeta'; // Método de pago por defecto
-  showPaymentModal = false;
-  cardDetails = {
-    number: '',
-    expiry: '',
-    cvv: '',
-    name: ''
-  };
   private subscription: Subscription = new Subscription(); // Para gestionar la suscripción y evitar memory leaks
 
   constructor(
@@ -45,6 +38,14 @@ export class Cart implements OnInit, OnDestroy {
 
   // Se ejecuta al iniciar el componente: se suscribe a los cambios del carrito
   ngOnInit() {
+    if (this.route.snapshot.queryParamMap.get('pago') === 'cancelado') {
+      // get() espera a que carguen las traducciones (la página viene de Stripe y se carga desde cero).
+      this.translate.get(['PAYMENT.CANCELLED_TITLE', 'PAYMENT.CANCELLED_MSG']).subscribe(t => {
+        this.notify.info(t['PAYMENT.CANCELLED_TITLE'], { message: t['PAYMENT.CANCELLED_MSG'] });
+      });
+      this.router.navigate([], { queryParams: {}, replaceUrl: true });
+    }
+
     this.subscription.add(
       this.cartService.cartItems$.subscribe(items => {
         this.cartItems = items; // Actualiza la lista local cuando el servicio emite cambios
@@ -92,43 +93,6 @@ export class Cart implements OnInit, OnDestroy {
     this.cartService.removeFromCart(productId); // Delega el borrado al servicio
   }
 
-  // Formateadores para el modal de pago
-  formatCardNumber(event: any) {
-    let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 16) {
-      value = value.slice(0, 16);
-    }
-    
-    const parts = [];
-    for (let i = 0; i < value.length; i += 4) {
-      parts.push(value.slice(i, i + 4));
-    }
-    const formatted = parts.join(' ');
-    this.cardDetails.number = formatted;
-    event.target.value = formatted;
-  }
-
-  formatExpiry(event: any) {
-    let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 4) value = value.slice(0, 4);
-    
-    let formatted = value;
-    if (value.length >= 3) {
-      formatted = value.slice(0, 2) + '/' + value.slice(2);
-    }
-    this.cardDetails.expiry = formatted;
-    event.target.value = formatted;
-  }
-
-  formatCVV(event: any) {
-    let value = event.target.value.replace(/\D/g, '');
-    if (value.length > 3) {
-      value = value.slice(0, 3);
-    }
-    this.cardDetails.cvv = value;
-    event.target.value = value;
-  }
-
   getProductDetailRoute(tipoProducto: string, id: number): any[] {
     const routeMap: { [key: string]: string } = {
       'Raton': 'raton',
@@ -150,6 +114,7 @@ export class Cart implements OnInit, OnDestroy {
     return url.replace(/\"/g, '').trim();
   }
 
+  /** Lleva al cliente a la página de pago de Stripe (pide login antes si hace falta). */
   completarpago() {
     if (this.isProcessingPayment || !this.hasItems) {
       return;
@@ -162,48 +127,24 @@ export class Cart implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
       return;
     }
-    this.showPaymentModal = true;
-  }
-
-  closePaymentModal() {
-    if (this.isProcessingPayment) {
-      return;
-    }
-    this.showPaymentModal = false;
-  }
-
-  confirmarPago() {
-    if (this.isProcessingPayment) {
-      return;
-    }
 
     this.isProcessingPayment = true;
     this.paymentError = '';
+    const request: CreateCheckoutRequest = {
+      items: this.cartItems.map(item => ({ productId: item.product.id, quantity: item.quantity })),
+    };
 
-    // Simular procesamiento de 5 segundos
-    setTimeout(() => {
-      const checkoutRequest: CreateCheckoutRequest = {
-        items: this.cartItems.map(item => ({
-          productId: item.product.id,
-          quantity: item.quantity
-        })),
-        metodoPago: this.selectedPaymentMethod
-      };
-
-      this.ticketService.createTicketFromCheckout(checkoutRequest).subscribe({
-        next: (response) => {
-          console.log('Pago completado con éxito:', response);
-          this.isProcessingPayment = false;
-          this.showPaymentModal = false;
-          // enviamos al pago
-          this.router.navigate(['/pago-completado']);
-        },
-        error: (error) => {
-          console.error('Error al procesar el pago:', error);
-          this.paymentError = typeof error.error === 'string' ? error.error : 'Error al procesar el pago. Inténtelo de nuevo.';
-          this.isProcessingPayment = false;
-        }
-      });
-    }, 5000);
+    this.ticketService.createCheckoutSession(request).subscribe({
+      next: ({ url }) => {
+        // Se mantiene el estado "redirigiendo" hasta que el navegador cambie de página.
+        window.location.assign(url);
+      },
+      error: (error) => {
+        this.isProcessingPayment = false;
+        const message = error?.error?.message ?? this.translate.instant('PAYMENT.START_ERROR');
+        this.paymentError = message;
+        this.notify.error(this.translate.instant('PAYMENT.START_ERROR_TITLE'), { message });
+      },
+    });
   }
 }

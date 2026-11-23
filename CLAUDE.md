@@ -42,3 +42,12 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Nunca escribir secretos en el código; solo en `.env` (backend) o como variables de entorno al desplegar.
 - Commits pequeños y en español.
 - Hacer cambios por fases y comprobar que el proyecto compila después de cada una (`./mvnw test`, `npm run build`).
+
+## Cómo arrancar en local
+
+1. Abrir Docker Desktop y ejecutar `cd backend && docker compose up -d` (MariaDB 11.4 en 127.0.0.1:3306, BD `gogaming`).
+2. Backend: `cd backend && ./mvnw spring-boot:run` → http://localhost:8081. Lee `backend/.env`; la plantilla de variables está en `.env.example`.
+   El puerto 8080 está ocupado en este PC por un proceso Java de NetWitSec.exe (software de seguridad). No tocarlo; por eso `SERVER_PORT=8081`.
+3. Frontend: `cd frontend && npm start` → http://localhost:4200 (API en `src/environments/environments.ts`).
+- Keystore JWT: `backend/storage/certs/jwt.jks` (fuera de git; si se pierde, regenerarlo con keytool, alias `jwt-keypair`).
+- Endpoints públicos de productos: `/api/v1/productos/home`, `/api/v1/productos/<categoria>[/{id}]`.

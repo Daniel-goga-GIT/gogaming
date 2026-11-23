@@ -36,7 +36,8 @@
                'bg-red-600 text-white': message.isUser,
                'bg-white text-gray-800 border border-gray-200': !message.isUser
              }">
-          <p class="whitespace-pre-wrap">{{ message.content }}</p>
+          <p *ngIf="message.isUser" class="whitespace-pre-wrap">{{ message.content }}</p>
+          <p *ngIf="!message.isUser" class="whitespace-pre-wrap" [innerHTML]="formatAssistant(message.content)"></p>
           <p class="text-xs mt-1 opacity-70">
             {{ message.timestamp | date:'HH:mm' }}
           </p>
@@ -82,7 +83,7 @@
       <div class="flex space-x-2">
         <input
           type="text"
-          [(ngModel)]="currentMessage"
+          [(ngModel)]="currentMessage" maxlength="1000"
           (keypress)="onKeyPress($event)"
           [disabled]="isLoading"
           placeholder="Escribe tu pregunta..."
@@ -90,8 +91,9 @@
         <button
           (click)="sendMessage()"
           [disabled]="!currentMessage.trim() || isLoading"
+          aria-label="Enviar mensaje"
           class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 rotate-90" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
           </svg>
         </button>

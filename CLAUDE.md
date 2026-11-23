@@ -22,7 +22,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 
 ## Problemas detectados (23 nov 2026)
 
-1. **SEGURIDAD:** hay una API key de OpenRouter escrita en el código de `ai-chat.component.ts`, que se envía al navegador. Ya está revocada y quitada del código. Pendiente: mover la llamada a la IA al backend.
+1. ~~API key de OpenRouter en el frontend~~ → revocada; ahora el chat pasa por el backend (`POST /api/v1/chat`).
 2. `.env` y `.env.produc` tienen secretos reales (Stripe, Google, SMTP, JWT). Ya se han añadido al `.gitignore`. Los repositorios originales son **públicos**, así que hay que cambiar todas las claves. Borrarlas del repositorio no basta, porque siguen en el historial.
 3. ~~El catálogo exigía login~~ → ya es público; el login se pide solo al pagar, al escribir reseñas y en el perfil.
 4. Hay mucho código repetido: un controller, servicio, repositorio, mapper, DTO, servicio Angular y componente por cada categoría.
@@ -76,3 +76,11 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Al desplegar: crear el endpoint del webhook en el Dashboard de Stripe con la URL pública y poner su secreto en las variables de entorno.
 - Tarjeta de prueba: `4242 4242 4242 4242`, cualquier fecha futura y CVC. Para probar el pago con 3D Secure: `4000 0027 6000 3184`.
 - Número de pedido: `GG-AAMMDD-XXXXX` (aleatorio; el anterior por segundos chocaba con la restricción UNIQUE).
+
+## Asistente con IA (chat)
+
+- `ChatService` + `POST /api/v1/chat` (público, máx. 10 mensajes/min por IP, 1000 caracteres por mensaje, se envían los últimos 10 mensajes como historial).
+- OpenRouter con modelos **gratuitos** en `OPENROUTER_MODELS` (lista separada por comas, en orden de preferencia). Cambian a menudo: si el chat deja de responder, mira `https://openrouter.ai/api/v1/models` y actualiza el `.env` sin tocar código.
+- Los modelos gratuitos "razonan" antes de responder: se piden `reasoning.effort=low` y `max_tokens=2000` (con 600 devolvían la respuesta vacía). Ante un 429 se reintenta una vez y después se pasa al siguiente modelo.
+- El prompt incluye el **catálogo real** (marca, producto, categoría, precio y stock, cacheado 5 min) y prohíbe inventar especificaciones.
+- El frontend formatea las respuestas de forma segura (escapa el HTML y solo aplica **negritas** y viñetas).

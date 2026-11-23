@@ -31,16 +31,7 @@ export class AiChatComponent implements OnInit, OnDestroy {
   currentUser: UserDTO | null = null;
   
   private destroy$ = new Subject<void>();
-  // TODO: mover la llamada a la IA al backend; la clave va en backend/.env (OPENROUTER_API_KEY)
-  private apiKey = '';
-  private apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
-
-  private models = [
-    'openrouter/free',
-    'meta-llama/llama-3.2-3b-instruct:free',
-    'google/gemini-2.0-flash-lite-preview-02-05:free'
-  ];
-  private currentModelIndex = 0;
+  private readonly chatUrl = `${environment.apiUrl}/v1/chat`;
 
   constructor(
     private http: HttpClient, 
@@ -99,83 +90,47 @@ export class AiChatComponent implements OnInit, OnDestroy {
 
     setTimeout(() => this.scrollToBottom(), 100);
 
-    this.callOpenRouterAPI(messageToSend);
+    this.askAssistant();
   }
 
-  private callOpenRouterAPI(message: string, retryCount = 0) {
-    const currentModel = this.models[this.currentModelIndex];
-    console.log(`Trying model: ${currentModel}`);
+  /** Envía la conversación al backend, que llama al modelo de IA con el catálogo real. */
+  private askAssistant() {
+    // El primer mensaje es el saludo local: no se envía.
+    const history = this.messages.slice(1).slice(-10).map(m => ({
+      role: m.isUser ? 'user' : 'assistant',
+      content: m.content,
+    }));
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'http://localhost:4200',
-      'X-Title': 'GoGaming'
-    });
+    const token = this.authService.getToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : new HttpHeaders();
 
-    const systemPrompt = `Eres un asistente virtual especializado en la tienda GoGaming. Tu función es ayudar a los clientes con:
-
-1. Información sobre productos gaming (ratones, teclados, alfombrillas, cascos, etc.)
-2. Recomendaciones basadas en el tipo de juego (FPS, MOBA, etc.)
-3. Detalles sobre envíos y devoluciones
-4. Dudas sobre el proceso de compra
-5. Características técnicas de los productos (DPI, switches, sensores)
-6. Reportar problemas o errores en la web
-
-Siempre responde de manera amigable, profesional y con un tono gamer pero respetuoso. Si no sabes algo específico sobre un pedido o stock en tiempo real, sugiere contactar al soporte técnico. Mantén las respuestas concisas pero informativas.`;
-
-    const body = {
-      model: currentModel,
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt
-        },
-        {
-          role: 'user',
-          content: message
-        }
-      ]
-    };
-    
-    // Eliminamos max_tokens para compatibilidad con openrouter/free y otros modelos
-    // (body as any).max_tokens = 500;
-
-    this.http.post(this.apiUrl, body, { headers })
+    this.http.post<{ reply: string }>(this.chatUrl, { messages: history }, { headers })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (response: any) => {
-          const aiResponse = response.choices[0]?.message?.content || 'Lo siento, no pude procesar tu consulta. Por favor, intenta de nuevo.';
-          
-          this.messages.push({
-            content: aiResponse,
-            isUser: false,
-            timestamp: new Date()
-          });
-          
-          this.isLoading = false;
-          setTimeout(() => this.scrollToBottom(), 100);
-        },
-        error: (error) => {
-          
-          // Intentar con el siguiente modelo si hay error
-          if (this.currentModelIndex < this.models.length - 1) {
-            this.currentModelIndex++;
-            this.callOpenRouterAPI(message, retryCount + 1);
-            return;
-          }
-          
-          this.messages.push({
-            content: 'Lo siento, todos mis servidores están ocupados en este momento. Por favor, intenta de nuevo más tarde. (En desarrollo)',
-            isUser: false,
-            timestamp: new Date()
-          });
-          this.isLoading = false;
-          // Reset model index for next user attempt
-          this.currentModelIndex = 0;
-          setTimeout(() => this.scrollToBottom(), 100);
-        }
+        next: ({ reply }) => this.pushAssistant(reply),
+        error: (error) => this.pushAssistant(
+          error?.error?.message ?? 'El asistente no está disponible ahora mismo. Inténtalo en unos minutos.'
+        ),
       });
+  }
+
+  private pushAssistant(content: string) {
+    this.messages.push({ content, isUser: false, timestamp: new Date() });
+    this.isLoading = false;
+    setTimeout(() => this.scrollToBottom(), 100);
+  }
+
+  /**
+   * Formato mínimo para las respuestas del asistente: se escapa todo el HTML
+   * y solo se convierten **negritas** y viñetas "- " / "* ".
+   */
+  formatAssistant(text: string): string {
+    const escaped = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return escaped
+      .replace(/^\s*[-*•]\s+/gm, '• ')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
   }
 
   private scrollToBottom() {

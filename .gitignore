@@ -1,0 +1,20 @@
+# Secretos (nunca subir)
+.env
+.env.*
+!.env.example
+*.p12
+*.jks
+*.pem
+
+# Dependencias y builds
+node_modules/
+target/
+dist/
+.angular/
+
+# IDE / sistema
+.idea/
+.vscode/
+*.log
+.DS_Store
+Thumbs.db

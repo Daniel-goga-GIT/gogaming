@@ -1,0 +1,986 @@
+<div class="min-h-screen flex bg-black font-sans text-gray-100 relative mt-[-1px] pt-[1px]">
+
+  <!-- Mobile Sidebar Overlay -->
+  <div *ngIf="sidebarOpen" (click)="toggleSidebar()" class="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity"></div>
+
+  <!-- Sidebar -->
+  <aside
+    [class.translate-x-0]="sidebarOpen"
+    [class.-translate-x-full]="!sidebarOpen"
+    class="fixed left-0 z-30 w-64 bg-[#111111] border-r border-[#2a3b55] flex flex-col transition-transform duration-300 md:translate-x-0 top-[140px] h-[calc(100vh-140px)] md:top-[136px] md:h-[calc(100vh-136px)]">
+
+    <div class="h-20 flex items-center justify-between px-4 border-b border-[#2a3b55]">
+      <span class="text-xl font-bold tracking-wider text-white">GOGAMING</span>
+      <button (click)="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-6">
+      <ul class="space-y-1 px-4">
+
+        <!-- Ratones -->
+        <li>
+          <button (click)="switchSection('ratones')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'ratones' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V5a2 2 0 00-2-2h-2M9 3a2 2 0 002 2h2a2 2 0 002-2M9 3v2m6-2v2" />
+            </svg>
+            <span>Ratones</span>
+          </button>
+        </li>
+
+        <!-- Teclados -->
+        <li>
+          <button (click)="switchSection('teclados')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'teclados' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+            </svg>
+            <span>Teclados</span>
+          </button>
+        </li>
+
+        <!-- Skates -->
+        <li>
+          <button (click)="switchSection('skates')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'skates' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+            </svg>
+            <span>Skates</span>
+          </button>
+        </li>
+
+        <!-- Alfombrillas -->
+        <li>
+          <button (click)="switchSection('alfombrillas')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'alfombrillas' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v12H4z" />
+            </svg>
+            <span>Alfombrillas</span>
+          </button>
+        </li>
+
+        <!-- Auriculares -->
+        <li>
+          <button (click)="switchSection('auriculares')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'auriculares' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+            </svg>
+            <span>Auriculares</span>
+          </button>
+        </li>
+
+        <!-- Mangas -->
+        <li>
+          <button (click)="switchSection('mangas')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'mangas' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+            <span>Mangas</span>
+          </button>
+        </li>
+
+        <!-- Pedidos -->
+        <li class="pt-2 border-t border-[#2a3b55] mt-2">
+          <button (click)="switchSection('pedidos')"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium"
+            [ngClass]="activeSection === 'pedidos' ? 'bg-[#CC0000] text-white shadow-lg shadow-red-900/20' : 'text-gray-300 hover:bg-[#2a3b55] hover:text-white'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            <span>Pedidos</span>
+          </button>
+        </li>
+
+      </ul>
+    </nav>
+
+    <div class="p-4 border-t border-[#2a3b55]">
+      <a routerLink="/"
+        class="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-[#1a2639] text-red-500 hover:bg-red-500/10 hover:text-red-400 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+        <span class="font-medium">Ir al inicio</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 md:ml-64 p-4 md:p-8 transition-all duration-300 bg-black">
+    <header class="flex justify-between items-center mb-6 md:mb-10">
+      <div class="flex items-center gap-4">
+        <button (click)="toggleSidebar()" class="md:hidden p-2 rounded-md bg-[#1a2639] text-white hover:bg-[#2a3b55]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Dashboard</h1>
+          <p class="text-gray-400 text-xs md:text-sm">Gestión del catálogo de productos</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Shared loading / error states -->
+    <div *ngIf="loading" class="flex justify-center py-12">
+      <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-red-600"></div>
+    </div>
+
+    <div *ngIf="error" class="bg-red-500/10 border border-red-500/50 text-red-500 px-4 py-3 rounded-lg flex items-center gap-3 mb-6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      {{ error }}
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- RATONES                                                           -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'ratones' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Ratones</h2>
+          <p class="text-gray-400 text-sm">{{ ratones.length }} productos</p>
+        </div>
+        <button (click)="openCreateRaton()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nuevo Ratón
+        </button>
+      </div>
+
+      <!-- Tabla ratones -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of ratones" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.sensor }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditRaton(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteRaton(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario ratón -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingRaton ? 'Editar Ratón' : 'Nuevo Ratón' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveRaton()" #f="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="ratonForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="ratonForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="ratonForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="ratonForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="ratonForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Sensor *</label>
+                <input type="text" [(ngModel)]="ratonForm.sensor" name="sensor" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Peso (g) *</label>
+                  <input type="number" [(ngModel)]="ratonForm.peso" name="peso" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Tipo Agarre *</label>
+                  <select [(ngModel)]="ratonForm.tipoAgarre" name="tipoAgarre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                    <option value="Palm">Palm</option>
+                    <option value="Claw">Claw</option>
+                    <option value="Fingertip">Fingertip</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Switches *</label>
+                <input type="text" [(ngModel)]="ratonForm.switches" name="switches" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Medidas *</label>
+                <input type="text" [(ngModel)]="ratonForm.medidas" name="medidas" required placeholder="122x62x37mm" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!f.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingRaton ? 'Guardar Cambios' : 'Crear Ratón' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- TECLADOS                                                          -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'teclados' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Teclados</h2>
+          <p class="text-gray-400 text-sm">{{ teclados.length }} productos</p>
+        </div>
+        <button (click)="openCreateTeclado()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nuevo Teclado
+        </button>
+      </div>
+
+      <!-- Tabla teclados -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of teclados" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.layout }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditTeclado(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteTeclado(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario teclado -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingTeclado ? 'Editar Teclado' : 'Nuevo Teclado' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveTeclado()" #ft="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="tecladoForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="tecladoForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="tecladoForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="tecladoForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="tecladoForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Tipo Switch *</label>
+                <input type="text" [(ngModel)]="tecladoForm.tipoSwitch" name="tipoSwitch" required placeholder="Ej: Cherry MX Red" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Layout *</label>
+                <input type="text" [(ngModel)]="tecladoForm.layout" name="layout" required placeholder="Ej: TKL ANSI" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Conectividad *</label>
+                <input type="text" [(ngModel)]="tecladoForm.conectividad" name="conectividad" required placeholder="Ej: USB-C, Bluetooth" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Retroiluminación *</label>
+                <input type="text" [(ngModel)]="tecladoForm.retroiluminacion" name="retroiluminacion" required placeholder="Ej: RGB por tecla" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!ft.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingTeclado ? 'Guardar Cambios' : 'Crear Teclado' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- SKATES                                                            -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'skates' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Skates</h2>
+          <p class="text-gray-400 text-sm">{{ skates.length }} productos</p>
+        </div>
+        <button (click)="openCreateSkate()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nuevo Skate
+        </button>
+      </div>
+
+      <!-- Tabla skates -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of skates" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.material }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditSkate(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteSkate(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario skate -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingSkate ? 'Editar Skate' : 'Nuevo Skate' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveSkate()" #fs="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="skateForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="skateForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="skateForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="skateForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="skateForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Material *</label>
+                <input type="text" [(ngModel)]="skateForm.material" name="material" required placeholder="Ej: PTFE" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Grosor (mm) *</label>
+                <input type="number" [(ngModel)]="skateForm.grosor" name="grosor" required min="0" step="0.1" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Compatibilidad *</label>
+                <input type="text" [(ngModel)]="skateForm.compatibilidad" name="compatibilidad" required placeholder="Ej: Logitech G Pro X" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!fs.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingSkate ? 'Guardar Cambios' : 'Crear Skate' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- ALFOMBRILLAS                                                      -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'alfombrillas' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Alfombrillas</h2>
+          <p class="text-gray-400 text-sm">{{ alfombrillas.length }} productos</p>
+        </div>
+        <button (click)="openCreateAlfombrilla()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nueva Alfombrilla
+        </button>
+      </div>
+
+      <!-- Tabla alfombrillas -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of alfombrillas" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.dimensiones }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditAlfombrilla(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteAlfombrilla(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario alfombrilla -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingAlfombrilla ? 'Editar Alfombrilla' : 'Nueva Alfombrilla' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveAlfombrilla()" #fa="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="alfombrillaForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="alfombrillaForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="alfombrillaForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="alfombrillaForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="alfombrillaForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Dimensiones *</label>
+                <input type="text" [(ngModel)]="alfombrillaForm.dimensiones" name="dimensiones" required placeholder="Ej: 320x270mm" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Grosor (mm) *</label>
+                <input type="number" [(ngModel)]="alfombrillaForm.grosor" name="grosor" required min="0" step="0.1" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Superficie *</label>
+                <input type="text" [(ngModel)]="alfombrillaForm.superficie" name="superficie" required placeholder="Ej: Cloth, Glass" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!fa.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingAlfombrilla ? 'Guardar Cambios' : 'Crear Alfombrilla' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- AURICULARES                                                       -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'auriculares' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Auriculares</h2>
+          <p class="text-gray-400 text-sm">{{ auriculares.length }} productos</p>
+        </div>
+        <button (click)="openCreateAuriculares()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nuevos Auriculares
+        </button>
+      </div>
+
+      <!-- Tabla auriculares -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of auriculares" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.tipo }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditAuriculares(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteAuriculares(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario auriculares -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingAuriculares ? 'Editar Auriculares' : 'Nuevos Auriculares' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveAuriculares()" #fau="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="auricularesForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="auricularesForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="auricularesForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="auricularesForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="auricularesForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Tipo *</label>
+                <input type="text" [(ngModel)]="auricularesForm.tipo" name="tipo" required placeholder="Ej: IEM, Headphones" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Driver *</label>
+                <input type="text" [(ngModel)]="auricularesForm.driver" name="driver" required placeholder="Ej: 10mm Dynamic" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Conectividad *</label>
+                <input type="text" [(ngModel)]="auricularesForm.conectividad" name="conectividad" required placeholder="Ej: 3.5mm Jack" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Impedancia *</label>
+                <input type="text" [(ngModel)]="auricularesForm.impedancia" name="impedancia" required placeholder="Ej: 32Ω" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!fau.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingAuriculares ? 'Guardar Cambios' : 'Crear Auriculares' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- MANGAS                                                            -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'mangas' && !loading" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Gestión de Mangas</h2>
+          <p class="text-gray-400 text-sm">{{ mangas.length }} productos</p>
+        </div>
+        <button (click)="openCreateManga()" *ngIf="!showForm"
+          class="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+          </svg>
+          Nueva Manga
+        </button>
+      </div>
+
+      <!-- Tabla mangas -->
+      <div *ngIf="!showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Imagen</th>
+                <th class="px-6 py-4 font-semibold">Nombre</th>
+                <th class="px-6 py-4 font-semibold">Marca</th>
+                <th class="px-6 py-4 font-semibold">Precio</th>
+                <th class="px-6 py-4 font-semibold">Stock</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <tr *ngFor="let item of mangas" class="hover:bg-white/5 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="w-12 h-12 bg-white rounded-lg p-1 flex items-center justify-center">
+                    <img [src]="getImageUrl(item.image)" [alt]="item.nombre" class="max-w-full max-h-full object-contain">
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm font-bold text-white">{{ item.nombre }}</div>
+                  <div class="text-xs text-gray-500">{{ item.talla }} — {{ item.material }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-300">{{ item.marca }}</td>
+                <td class="px-6 py-4"><span class="text-sm font-bold text-red-500">{{ item.precio }} €</span></td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-500/10 text-green-500': item.stock > 10, 'bg-orange-500/10 text-orange-500': item.stock > 0 && item.stock <= 10, 'bg-red-500/10 text-red-500': item.stock <= 0}">
+                    {{ item.stock }} uds.
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex justify-end gap-2">
+                    <button (click)="openEditManga(item)" class="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-lg transition-all" title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" /></svg>
+                    </button>
+                    <button (click)="deleteManga(item.id)" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all" title="Eliminar">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Formulario manga -->
+      <div *ngIf="showForm" class="bg-[#111111] border border-[#2a3b55] rounded-xl p-6 shadow-2xl max-w-4xl mx-auto">
+        <div class="flex items-center justify-between mb-8 border-b border-[#2a3b55] pb-4">
+          <h2 class="text-2xl font-bold text-white">{{ editingManga ? 'Editar Manga' : 'Nueva Manga' }}</h2>
+          <button (click)="closeForm()" class="text-gray-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <form (ngSubmit)="saveManga()" #fm="ngForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre *</label>
+                <input type="text" [(ngModel)]="mangaForm.nombre" name="nombre" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Marca *</label>
+                <input type="text" [(ngModel)]="mangaForm.marca" name="marca" required class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Precio (€) *</label>
+                  <input type="number" [(ngModel)]="mangaForm.precio" name="precio" required min="0" step="0.01" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-1">Stock *</label>
+                  <input type="number" [(ngModel)]="mangaForm.stock" name="stock" required min="0" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">URL Imagen</label>
+                <input type="text" [(ngModel)]="mangaForm.image" name="image" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Talla *</label>
+                <input type="text" [(ngModel)]="mangaForm.talla" name="talla" required placeholder="Ej: S, M, L, XL" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Material *</label>
+                <input type="text" [(ngModel)]="mangaForm.material" name="material" required placeholder="Ej: Lycra, Neopreno" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Largo (cm) *</label>
+                <input type="number" [(ngModel)]="mangaForm.largo" name="largo" required min="0" step="0.1" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Color *</label>
+                <input type="text" [(ngModel)]="mangaForm.color" name="color" required placeholder="Ej: Negro, Blanco" class="w-full bg-[#1a2639] border border-[#2a3b55] rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-red-600 transition-colors">
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end gap-4 pt-6 border-t border-[#2a3b55]">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 border border-[#2a3b55] text-gray-300 rounded-lg font-bold hover:bg-white/5 transition-all">Cancelar</button>
+            <button type="submit" [disabled]="!fm.form.valid" class="px-8 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 text-white rounded-lg font-bold transition-all shadow-lg shadow-red-900/20">
+              {{ editingManga ? 'Guardar Cambios' : 'Crear Manga' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <!-- PEDIDOS                                                           -->
+    <!-- ══════════════════════════════════════════════════════════════════ -->
+    <div *ngIf="activeSection === 'pedidos' && !loading" class="space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-white">Gestión de Pedidos</h2>
+        <p class="text-gray-400 text-sm">{{ pedidos.length }} pedidos en total</p>
+      </div>
+
+      <!-- Tabla pedidos -->
+      <div class="bg-[#111111] border border-[#2a3b55] rounded-xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-[#1a2639] text-gray-400 text-xs uppercase tracking-wider">
+                <th class="px-6 py-4 font-semibold">Nº Pedido</th>
+                <th class="px-6 py-4 font-semibold">Fecha</th>
+                <th class="px-6 py-4 font-semibold">Usuario ID</th>
+                <th class="px-6 py-4 font-semibold">Total</th>
+                <th class="px-6 py-4 font-semibold">Método</th>
+                <th class="px-6 py-4 font-semibold">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#2a3b55]">
+              <ng-container *ngFor="let pedido of pedidos">
+                <tr class="hover:bg-white/5 transition-colors">
+                  <td class="px-6 py-4">
+                    <span class="text-sm font-mono font-bold text-white">{{ pedido.numeroTicket }}</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-300">
+                    {{ pedido.fecha | date:'dd/MM/yyyy HH:mm' }}
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm text-gray-400">#{{ pedido.userId }}</span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="text-sm font-bold text-red-500">{{ pedido.total | number:'1.2-2' }} €</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-300">{{ pedido.metodoPago }}</td>
+                  <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider"
+                          [ngClass]="{
+                            'bg-yellow-500/10 text-yellow-400': pedido.estado === 'Preparando',
+                            'bg-blue-500/10 text-blue-400':    pedido.estado === 'Enviado',
+                            'bg-green-500/10 text-green-400':  pedido.estado === 'Entregado',
+                            'bg-red-500/10 text-red-400':      pedido.estado === 'Cancelado'
+                          }">
+                      {{ pedido.estado }}
+                    </span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>

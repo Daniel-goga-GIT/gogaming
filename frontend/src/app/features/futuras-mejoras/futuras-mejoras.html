@@ -1,0 +1,67 @@
+<section class="min-h-[75vh] flex flex-col justify-center text-gray-800 px-6 md:px-16 py-12">
+  <div class="max-w-5xl w-full mx-auto">
+
+    <h1 class="text-3xl md:text-5xl font-bold text-red-600 mb-4">Futuras mejoras</h1>
+    <p class="text-gray-700 mb-10">
+      GoGaming está en constante evolución. Estas son las funcionalidades que tenemos planificadas para próximas versiones.
+    </p>
+
+    <!-- Gestión de direcciones -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-1">Gestión de direcciones en el perfil de usuario</h2>
+      <span class="inline-block mb-3 text-xs font-bold uppercase tracking-wider text-red-600">Mejora prioritaria</span>
+      <p class="text-gray-700">
+        Se implementará un apartado de direcciones dentro del perfil que permita guardar varias direcciones y seleccionar una como predeterminada para agilizar el proceso de checkout.
+      </p>
+    </div>
+
+    <!-- Pasarela de pago -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Validación de tarjeta y métodos de pago reales</h2>
+      <p class="text-gray-700">
+        GoGaming actualmente simula el proceso de compra sin cobro real. La solución planteada es integrar Stripe como pasarela de pago principal, soportando tarjeta de crédito, débito, Apple Pay y Google Pay.
+      </p>
+    </div>
+
+    <!-- Rastreo de paquetes -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Sistema de rastreo de paquetes</h2>
+      <p class="text-gray-700">
+        El seguimiento de pedidos actualmente es manual. Se plantea integrar APIs de transportista para que el cliente pueda consultar el estado de su envío en tiempo real directamente desde su perfil, sin necesidad de acceder a la web del transportista.
+      </p>
+    </div>
+
+    <!-- Sistema de reportes -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Sistema de reportes</h2>
+      <p class="text-gray-700">
+        La plataforma carece de un sistema que permita denunciar reseñas fraudulentas o comentarios inapropiados. Se implementará un botón de reporte en cada reseña junto con un panel de gestión en el dashboard para que el administrador pueda revisar y actuar sobre el contenido denunciado.
+      </p>
+    </div>
+
+    <!-- Login Google -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Corrección del inicio de sesión con Google</h2>
+      <p class="text-gray-700">
+        El login con Google está parcialmente implementado pero presenta fallos en producción. La mejora consiste en revisar la configuración OAuth2 en Google Cloud Console, corregir los redirect URIs para el dominio gogaming.es y garantizar que el flujo de creación de usuario mediante Google sea consistente con el sistema JWT existente.
+      </p>
+    </div>
+
+    <!-- Buscador de productos -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Buscador de productos</h2>
+      <p class="text-gray-700">
+        La barra de búsqueda en el header es actualmente visual y no funcional. La mejora consiste en implementar un buscador global que permita buscar por nombre o marca entre todos los tipos de producto (ratones, teclados, skates, alfombrillas, auriculares y mangas), mostrando los resultados en una página dedicada con filtros y paginación.
+      </p>
+    </div>
+
+    <!-- Pop-ups y alertas modernas -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Pop-ups y alertas modernas</h2>
+      <p class="text-gray-700">
+        Actualmente la aplicación usa <code class="bg-gray-100 px-1 rounded text-sm">alert()</code> nativo del navegador para comunicar acciones al usuario, lo que rompe la experiencia visual. Se plantea sustituirlos por notificaciones toast o modales integrados en la interfaz, coherentes con el diseño de GoGaming, para confirmar acciones como añadir al carrito, guardar cambios o mostrar errores de validación.
+      </p>
+    </div>
+
+  </div>
+</section>

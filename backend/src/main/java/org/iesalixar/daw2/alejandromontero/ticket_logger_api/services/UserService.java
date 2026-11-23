@@ -1,0 +1,178 @@
+package org.iesalixar.daw2.alejandromontero.ticket_logger_api.services;
+
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.controllers.UserController;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos.UserCreateDTO;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos.UserDTO;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.Role;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.User;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.mappers.UserMapper;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.repositories.UserRepository;
+import org.iesalixar.daw2.alejandromontero.ticket_logger_api.repositories.RoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service
+public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @Autowired
+    @Lazy
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    //Busca el usuario y busca el id
+    public Long getIdByEmail(String email) {
+        return userRepository.getIdByEmail(email);
+    }
+
+    public UserDTO getUserDTOById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if(userOptional.isPresent()) {
+            return userMapper.toDTO(userOptional.get());
+        }
+        throw new RuntimeException("User con identificado" + id +"encontrado");
+    }
+
+    public User getUserById(Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+
+        if(userOpt.isPresent()) {
+            return userOpt.get();
+        }
+        throw new RuntimeException("User con identificado" + id +"encontrado");
+    }
+
+    public UserDTO createUser(UserCreateDTO userCreateDTO) {
+        // verificar si ya existe un usuario con el mismo nombre
+        if (userRepository.existsByEmail(userCreateDTO.getEmail())) {
+            throw new IllegalArgumentException("Este usuario ya existe");
+        }
+
+        User user = userMapper.toEntity(userCreateDTO);
+
+        // 1. Hashear contraseña
+        user.setPassword(passwordEncoder.encode(userCreateDTO.getPassword()));
+
+        String fileName = null;
+        if (userCreateDTO.getImageFile() != null && !userCreateDTO.getImageFile().isEmpty()){
+            fileName = fileStorageService.saveFile(userCreateDTO.getImageFile());
+            if (fileName == null) {
+                throw new RuntimeException("Error al cargar imagen");
+            }
+        }
+        user.setImage(fileName);
+
+        // 2. Asignamos el Rol por defecto
+        // Buscamos el rol ROLE_USER en la BD
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Error: El rol ROLE_USER no existe en la base de datos."));
+
+        // Inicializamos el Set y añadimos el rol
+        user.setRoles(Collections.singleton(userRole));
+
+        // 3. Guardar y mapear a DTO
+        User savedUser = userRepository.save(user);
+        return userMapper.toDTO(savedUser);
+    }
+
+    //IMAGENES
+    public UserDTO uploadImage(Long id, org.springframework.web.multipart.MultipartFile file) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        // 2. LÓGICA DE BORRADO: Si ya tenía imagen, la eliminamos físicamente
+        if (user.getImage() != null && !user.getImage().isEmpty()) {
+            try {
+                fileStorageService.deleteFile(user.getImage());
+                logger.info("Imagen antigua eliminada: {}", user.getImage());
+            } catch (Exception e) {
+                // Logueamos pero seguimos adelante para no interrumpir la subida
+                logger.warn("No se pudo eliminar el archivo físico: {}", user.getImage());
+            }
+        }
+        // 3. Guardamos el nuevo archivo
+        String fileName = fileStorageService.saveFile(file);
+        if (fileName == null) {
+            throw new RuntimeException("Error al guardar la imagen en el servidor");
+        }
+        // 4. Actualizamos y guardamos
+        user.setImage(fileName);
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toDTO(savedUser);
+    }
+
+
+    //TWO FACTOR
+    public void saveCode(String code, Long id){
+        if (id != null) {
+            Optional<User> userOptional = userRepository.findById(id);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                user.setCode(code);
+                userRepository.save(user);
+            }
+        }
+    }
+
+    public void clear2FactorCode(Long id) {
+        userRepository.findById(id).ifPresent(user -> {
+            user.setCode(null);
+            userRepository.save(user);
+        });
+    }
+
+    public User findOrCreateGoogleUser(String email, String firstName, String lastName) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Error: El rol ROLE_USER no existe en la base de datos."));
+
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setEnabled(true);
+        newUser.setFirstName((firstName == null || firstName.isBlank()) ? "Google" : firstName);
+        newUser.setLastName((lastName == null || lastName.isBlank()) ? "User" : lastName);
+
+        // los usuarios de Google no se autentican con contrasena en este flujo, pero el campo es obligatorio en la BD
+        newUser.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+        newUser.setRoles(Collections.singleton(userRole));
+
+        return userRepository.save(newUser);
+    }
+
+
+}

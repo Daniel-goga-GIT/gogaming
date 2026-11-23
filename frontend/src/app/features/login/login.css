@@ -1,0 +1,438 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+.hytale-login-bg {
+    width: 100%;
+    min-height: 100vh; /* Ocupa toda la pantalla, ajustado de 50vh */
+    background-image: url('https://hytale.com/static/images/backgrounds/content-upper-new-1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+}
+
+/* Overlay oscuro para mejorar legibilidad */
+.hytale-login-bg::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+}
+
+.login-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.login-logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.login-card-hytale {
+    background-color: rgba(24, 32, 48, 0.95); /* Fondo oscuro semitransparente */
+    border: 2px solid #2a3b55;
+    border-radius: 12px;
+    padding: 40px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    color: #fff;
+    position: relative;
+}
+
+/* Esquinas decorativas estilo "piedra/metálico" (opcional, simplificado con bordes) */
+.login-card-hytale::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.card-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.card-header h2 {
+    font-weight: 800;
+    font-size: 1.8rem;
+    margin: 0;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-header p {
+    color: #839bb6;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+/* Formularios */
+.hytale-form .form-group {
+    margin-bottom: 20px;
+}
+
+.hytale-form label {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: #839bb6;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hytale-form input[type="text"],
+.hytale-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #0e1219;
+    border: 1px solid #2a3b55;
+    border-radius: 6px;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    box-sizing: border-box; /* Importante para padding */
+}
+
+.hytale-form input:focus {
+    outline: none;
+    border-color: #3785bd;
+    box-shadow: 0 0 0 2px rgba(55, 133, 189, 0.2);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 0.85rem;
+    color: #839bb6;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s;
+    transform: translateY(-2px); /* Ajuste visual para alinear con el enlace */
+}
+
+.remember-me:hover {
+    color: #fff;
+}
+
+/* Custom Checkbox */
+.remember-me input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background-color: #0e1219;
+    border: 1px solid #2a3b55;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+
+.remember-me input[type="checkbox"]:hover {
+    border-color: #3785bd;
+    box-shadow: 0 0 0 2px rgba(55, 133, 189, 0.2);
+}
+
+.remember-me input[type="checkbox"]:checked {
+    background-color: #3785bd;
+    border-color: #3785bd;
+}
+
+/* Checkmark animation */
+.remember-me input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+    opacity: 0;
+}
+
+.remember-me input[type="checkbox"]:checked::after {
+    transform: rotate(45deg) scale(1);
+    opacity: 1;
+}
+
+.forgot-link {
+    color: #3785bd;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.forgot-link:hover {
+    color: #5aa9e0;
+}
+
+/* Separador moderno */
+.login-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #839bb6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-separator::before,
+.login-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #2a3b55;
+}
+
+.login-separator::before {
+    margin-right: 15px;
+}
+
+.login-separator::after {
+    margin-left: 15px;
+}
+
+/* Botón Hytale */
+.hytale-btn-submit {
+    width: 100%;
+    display: block;
+    background: linear-gradient(180deg, #3785bd 0%, #1a5688 100%);
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 15px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* Bordes complejos */
+    border: 1px solid #7ebce6;
+    outline: 2px solid #14233a;
+    box-shadow: 
+        0 0 0 4px #8f743c, /* Borde dorado */
+        0 0 0 5px #14233a, /* Borde oscuro exterior */
+        0 5px 15px rgba(0,0,0,0.3);
+    
+    margin-bottom: 10px; /* Espacio para el borde inferior */
+}
+
+.hytale-btn-submit:hover {
+    background: linear-gradient(180deg, #469ad6 0%, #206aa5 100%);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 0 0 4px #bfa365,
+        0 0 0 5px #14233a,
+        0 8px 20px rgba(0,0,0,0.4);
+}
+
+.hytale-btn-submit:active {
+    transform: translateY(1px);
+    box-shadow: 
+        0 0 0 4px #8f743c,
+        0 0 0 5px #14233a,
+        0 2px 5px rgba(0,0,0,0.3);
+}
+
+.card-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #839bb6;
+}
+
+.card-footer a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 5px;
+    transition: color 0.2s;
+}
+
+/* Password Toggle Styling */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    padding-right: 45px !important; /* Space for the eye icon */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #839bb6;
+    opacity: 0.7;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.password-toggle-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.password-toggle-icon:hover {
+    opacity: 1;
+    color: #3785bd;
+}
+
+/* Placeholder Transparency */
+::placeholder {
+    color: #839bb6;
+    opacity: 0.5; /* Firefox */
+}
+
+::-ms-input-placeholder { /* Edge 12-18 */
+    color: #839bb6;
+    opacity: 0.5;
+}
+
+.card-footer a:hover {
+    color: #3785bd;
+}
+
+.error-msg {
+    color: #ff5555;
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.field-error {
+        color: #ff5555;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        font-weight: 600;
+    }
+
+/* --- Responsive Adjustments (Mobile) --- */
+@media (max-width: 768px) {
+    .hytale-login-bg {
+        /* En móvil a veces es mejor que no ocupe 100vh fijos si hay teclado virtual, 
+           pero min-height ayuda. Ajustamos padding para centrar mejor. */
+        padding: 20px 0;
+        align-items: flex-start; /* Subir el contenido un poco */
+        padding-top: 80px; /* Espacio desde arriba */
+    }
+
+    .login-container {
+        padding: 15px 30px; /* Más separación lateral para que no se pegue */
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .login-logo {
+        width: 180px; /* Logo más pequeño */
+        margin-bottom: 15px;
+    }
+
+    
+
+    .login-card-hytale {
+        padding: 25px 20px; /* Padding interno reducido */
+        border-width: 1px; /* Borde más fino */
+        border-radius: 8px;
+    }
+
+    .card-header {
+        margin-bottom: 20px;
+    }
+
+    .card-header h2 {
+        font-size: 1.4rem; /* Título más pequeño */
+    }
+
+    .card-header p {
+        font-size: 0.85rem;
+    }
+
+    .hytale-form input[type="text"],
+    .hytale-form input[type="password"] {
+        font-size: 16px; /* Evita zoom en iOS */
+        padding: 10px 12px;
+    }
+
+    .form-actions {
+        gap: 15px;
+    }
+
+    .remember-me {
+        width: 100%;
+    }
+
+    .forgot-link {
+        font-size: 0.9rem;
+        align-self: flex-end; /* Alinear a la derecha si se prefiere, o dejar en start */
+    }
+
+    .hytale-btn-submit {
+        padding: 12px;
+        font-size: 1rem;
+        /* Reducir sombras/bordes complejos para ganar espacio */
+        box-shadow: 
+            0 0 0 3px #8f743c,
+            0 0 0 4px #14233a,
+            0 3px 10px rgba(0,0,0,0.3);
+    }
+    
+    .card-footer {
+        margin-top: 20px;
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+.btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+    pointer-events: disable;
+}
+.btn-disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+

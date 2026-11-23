@@ -1,0 +1,11 @@
+<div class="min-h-screen flex flex-col">
+  <app-header></app-header>
+
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer *ngIf="showFooter"></app-footer>
+</div>
+<!-- Chatbot AI Component -->
+<app-ai-chat></app-ai-chat>

@@ -1,0 +1,58 @@
+<div class="min-h-[calc(100vh-200px)] bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden font-sans">
+  
+  <!-- Subtle decorative background elements -->
+  <div class="hidden md:block absolute top-0 left-0 w-full h-1"></div>
+  <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+  <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-gray-100 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+  <div class="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-md p-6 md:p-8 relative z-10 animate-fade-in-up border border-gray-100">
+    
+    <!-- Animated Check Icon Container -->
+    <div class="flex justify-center mb-6 relative">
+      <div class="absolute inset-0 bg-green-50 rounded-full animate-pulse-slow transform scale-150 opacity-50"></div>
+      <svg class="checkmark relative z-10 w-20 h-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+    </div>
+
+    <!-- Main Content -->
+    <div class="text-center space-y-2 mb-6">
+      <h1 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+        {{ 'PAYMENT.SUCCESS_TITLE' | translate }}
+      </h1>
+      <p class="text-gray-500 text-base font-medium leading-relaxed max-w-sm mx-auto">
+        {{ 'PAYMENT.SUCCESS_MSG' | translate }}
+      </p>
+    </div>
+
+    <!-- Order Status Box -->
+    <div class="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-100 flex items-center gap-3 transition-transform hover:scale-[1.02] duration-300">
+      <div class="bg-white p-2.5 rounded-lg shadow-sm shrink-0 border border-gray-100">
+        <svg class="w-5 h-5 text-[#CC0000]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="font-bold text-gray-900 text-sm mb-0.5">{{ 'PAYMENT.SUCCESS_CONF_TITLE' | translate }}</h3>
+        <p class="text-gray-500 text-xs leading-snug">
+          {{ 'PAYMENT.SUCCESS_CONF_MSG' | translate }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:gap-3">
+      <a routerLink="/" class="flex-1 group relative inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-bold rounded-lg text-white bg-[#CC0000] hover:bg-[#b30000] transition-all duration-200 shadow-md shadow-red-500/20 hover:shadow-red-500/30 active:scale-[0.98]">
+        <span>{{ 'PAYMENT.SUCCESS_BACK' | translate }}</span>
+        <svg class="ml-1.5 -mr-0.5 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </a>
+      
+      <a routerLink="/me" class="flex-1 inline-flex items-center justify-center px-5 py-2.5 border border-gray-200 text-sm font-bold rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 active:scale-[0.98]">
+        {{ 'PAYMENT.SUCCESS_ORDERS' | translate }}
+      </a>
+    </div>
+  </div>
+</div>

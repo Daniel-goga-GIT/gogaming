@@ -1,0 +1,36 @@
+<section class="w-full py-12 md:py-20 flex flex-col items-center justify-center bg-white text-black relative overflow-hidden">
+
+    <div class="z-10 text-center px-4 w-full max-w-4xl mx-auto">
+        <!-- Error Code -->
+        <h1 class="text-6xl md:text-8xl font-extrabold text-[#CC0000] drop-shadow-sm tracking-tighter mb-2">
+            🔒
+        </h1>
+        
+        <!-- Title -->
+        <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            {{ 'ERRORS.FORBIDDEN_TITLE' | translate }}
+        </h2>
+        
+        <!-- Description -->
+        <p class="text-gray-600 text-base md:text-lg max-w-lg mx-auto mb-8 leading-relaxed">
+            {{ 'ERRORS.FORBIDDEN_MSG' | translate }}
+        </p>
+
+        <!-- Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <a routerLink="/" class="w-full sm:w-auto inline-flex justify-center bg-[#CC0000] hover:bg-[#990000] text-white font-semibold text-sm md:text-base px-6 py-3 rounded-lg transition-all transform hover:scale-105 shadow-md border-2 border-transparent hover:border-red-400">
+                {{ 'ERRORS.FORBIDDEN_BACK_HOME' | translate }}
+            </a>
+            <a routerLink="/login" class="w-full sm:w-auto inline-flex justify-center bg-transparent border-2 border-black text-black hover:bg-black/5 font-semibold text-sm md:text-base px-6 py-3 rounded-lg transition-all transform hover:scale-105">
+                {{ 'LOGIN.TITLE' | translate }}
+            </a>
+        </div>
+    </div>
+    
+    <!-- Lock Icon (Background Watermark) -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 opacity-5 pointer-events-none text-black">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-64 w-64 md:h-96 md:w-96" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+    </div>
+</section>

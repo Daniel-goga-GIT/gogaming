@@ -1,0 +1,159 @@
+<div class="w-full py-12 md:py-20 bg-white text-black">
+  <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row gap-12 md:gap-24 items-center">
+    <div class="flex-1 hidden md:flex flex-col gap-8">
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2">{{ 'REGISTER.BENEFITS_WISHLIST_TITLE' | translate }}</h3>
+          <p class="text-gray-600 leading-relaxed">
+            {{ 'REGISTER.BENEFITS_WISHLIST_MSG' | translate }}
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v8.25A2.25 2.25 0 006.75 20.25h10.5A2.25 2.25 0 0019.5 18V9.75" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2">{{ 'REGISTER.BENEFITS_FASTER_TITLE' | translate }}</h3>
+          <p class="text-gray-600 leading-relaxed">
+            {{ 'REGISTER.BENEFITS_FASTER_MSG' | translate }}
+          </p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.668 8.903a2.25 2.25 0 00-.356-3.173l-1.07-.894a2.25 2.25 0 00-3.173.356l-8.059 9.64a4.5 4.5 0 00-.99 2.832v2.691a1.125 1.125 0 001.125 1.125h2.691a4.5 4.5 0 002.832-.99l9.64-8.059z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 5.25l3.75 3.75" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold mb-2">{{ 'REGISTER.BENEFITS_PROFILE_TITLE' | translate }}</h3>
+          <p class="text-gray-600 leading-relaxed">
+            {{ 'REGISTER.BENEFITS_PROFILE_MSG' | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="hidden md:block w-px bg-gray-300 self-stretch"></div>
+
+    <div class="flex-1 w-full max-w-md mx-auto">
+      <h2 class="text-3xl font-bold mb-8">{{ 'REGISTER.TITLE' | translate }}</h2>
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1">
+          <div class="relative">
+            <input
+              type="text"
+              formControlName="firstName"
+              [placeholder]="'REGISTER.FIRST_NAME_PLACEHOLDER' | translate"
+              class="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:border-black transition-colors"
+              [class.border-red-500]="userForm.get('firstName')?.invalid && (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)"
+            />
+          </div>
+          <div *ngIf="userForm.get('firstName')?.invalid && (userForm.get('firstName')?.dirty || userForm.get('firstName')?.touched)" class="text-red-500 text-sm">
+            {{ 'LOGIN.PASSWORD_REQUIRED' | translate }}
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <div class="relative">
+            <input
+              type="text"
+              formControlName="lastName"
+              [placeholder]="'REGISTER.LAST_NAME_PLACEHOLDER' | translate"
+              class="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:border-black transition-colors"
+              [class.border-red-500]="userForm.get('lastName')?.invalid && (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)"
+            />
+          </div>
+          <div *ngIf="userForm.get('lastName')?.invalid && (userForm.get('lastName')?.dirty || userForm.get('lastName')?.touched)" class="text-red-500 text-sm">
+            {{ 'LOGIN.PASSWORD_REQUIRED' | translate }}
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <div class="relative">
+            <input
+              type="email"
+              formControlName="email"
+              [placeholder]="'REGISTER.EMAIL_PLACEHOLDER' | translate"
+              class="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:border-black transition-colors"
+              [class.border-red-500]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+            />
+          </div>
+          <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-red-500 text-sm">
+            {{ 'LOGIN.EMAIL_ERROR' | translate }}
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <div class="relative">
+            <input
+              #pwInput
+              type="password"
+              formControlName="password"
+              [placeholder]="'REGISTER.PASSWORD_PLACEHOLDER' | translate"
+              class="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:border-black transition-colors"
+              [class.border-red-500]="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)"
+            />
+            <button type="button" (click)="pwInput.type = pwInput.type === 'password' ? 'text' : 'password'" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black">
+              <svg *ngIf="pwInput.type === 'password'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="pwInput.type === 'text'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+          </button>
+          </div>
+          
+          <div *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)" class="text-red-500 text-sm">
+            {{ 'LOGIN.PASSWORD_PATTERN' | translate }}
+          </div>
+        </div>
+        
+        <div *ngIf="success" class="bg-green-50 text-[#006400] px-4 py-3 rounded text-sm border border-green-200">
+          {{ success }}
+        </div>
+
+        <div *ngIf="error" class="bg-red-50 text-[#8B0000] px-4 py-3 rounded text-sm border border-red-200">
+          {{ error }}
+        </div>
+
+        <button type="submit" class="w-full bg-[#CC0000] hover:bg-[#990000] text-white font-bold py-3 px-4 rounded transition-colors mt-2">
+          {{ 'REGISTER.BUTTON' | translate }}
+        </button>
+
+        <div class="mt-4 flex flex-col items-center gap-1">
+          <button type="button" class="btn-disabled w-full bg-white border border-gray-300 text-gray-800 font-bold py-3 px-4 rounded hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5">
+              <path fill="#4285F4" d="M24 9.5c3.54 0 6 1.54 7.38 2.83l5.42-5.42C33.64 3.5 29.27 1.5 24 1.5 14.91 1.5 7.16 6.98 4.12 14.44l6.89 5.35C12.35 14.62 17.67 9.5 24 9.5z"/>
+              <path fill="#34A853" d="M46.08 24.5c0-1.54-.14-3.02-.41-4.44H24v8.39h12.41c-.54 2.79-2.17 5.15-4.63 6.74l7.24 5.62C43.84 36.57 46.08 30.95 46.08 24.5z"/>
+              <path fill="#FBBC05" d="M11.01 28.21A14.5 14.5 0 0 1 10.25 24c0-1.46.25-2.88.7-4.21l-6.89-5.35A22.42 22.42 0 0 0 1.92 24c0 3.6.86 7 2.39 10.01l6.7-5.8z"/>
+              <path fill="#EA4335" d="M24 46.5c5.85 0 10.77-1.93 14.36-5.25l-7.24-5.62C29.33 37.34 26.86 38.5 24 38.5c-6.33 0-11.65-5.12-12.99-11.79l-6.89 5.35C7.16 41.02 14.91 46.5 24 46.5z"/>
+              <path fill="none" d="M1.92 1.5h44.16v44.16H1.92z"/>
+            </svg>
+            <span>{{ 'LOGIN.GOOGLE' | translate }}</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="relative flex items-center py-8">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="flex-shrink-0 mx-4 text-gray-600 text-sm font-semibold">{{ 'REGISTER.ALREADY_HAVE_ACCOUNT' | translate }}</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+      </div>
+
+      <button type="button" routerLink="/login" class="w-full bg-white border border-gray-300 text-gray-800 font-bold py-3 px-4 rounded hover:bg-gray-50 transition-colors">
+        {{ 'LOGIN.TITLE' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

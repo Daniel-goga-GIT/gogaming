@@ -3,6 +3,7 @@
 Tienda online de periféricos gaming (ratones, teclados, alfombrillas, skates, auriculares/IEM) y mangas.
 Es el proyecto principal del portfolio. Objetivo: dejarla con calidad profesional antes del **4 dic 2026**.
 Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Responde siempre en **español**.
+Repositorio público con licencia «todos los derechos reservados» (`LICENSE`): se puede consultar, no reutilizar.
 
 ## Estructura
 
@@ -51,7 +52,7 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 
 1. Abrir Docker Desktop y ejecutar `cd backend && docker compose up -d` (MariaDB 11.4 en 127.0.0.1:3306, BD `gogaming`).
 2. Backend: `cd backend && ./mvnw spring-boot:run` → http://localhost:8081. Lee `backend/.env`; la plantilla de variables está en `.env.example`.
-   El puerto 8080 está ocupado en este PC por un proceso Java de NetWitSec.exe (software de seguridad). No tocarlo; por eso `SERVER_PORT=8081`.
+   El puerto 8080 está ocupado en este PC por NetWitSec.exe: es el TPV del propio usuario (proyecto `Documents\NetLavanda`, instalado como servicio de Windows). No tocarlo; por eso `SERVER_PORT=8081`.
 3. Frontend: `cd frontend && npm start` → http://localhost:4200 (API en `src/environments/environments.ts`).
 - Keystore JWT: `backend/storage/certs/jwt.jks` (fuera de git; si se pierde, regenerarlo con keytool, alias `jwt-keypair`).
 - Endpoints públicos de productos: `/api/v1/productos/home`, `/api/v1/productos/<categoria>[/{id}]`.

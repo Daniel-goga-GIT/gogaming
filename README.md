@@ -127,3 +127,7 @@ docs/screenshots/
 ## Autor
 
 Daniel González García — proyecto final del ciclo de Desarrollo de Aplicaciones Web (DAW), ampliado como proyecto de portfolio.
+
+## Licencia
+
+© 2026 Daniel González García. Todos los derechos reservados. El código se publica solo para consultarlo como muestra de trabajo; no se permite copiarlo ni reutilizarlo sin permiso (ver [LICENSE](LICENSE)).

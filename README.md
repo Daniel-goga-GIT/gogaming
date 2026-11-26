@@ -36,6 +36,8 @@ Tiene catálogo con buscador, cesta, **pagos reales con Stripe Checkout** (modo 
 - **Panel de administración:** CRUD de productos de las 6 categorías con un único formulario generado a partir de la definición de cada una, y gestión del estado de los pedidos.
 - **Bilingüe** (español/inglés). Un script comprueba que no falte ninguna traducción.
 
+- **Servidor MCP** (`mcp-server/`): permite preguntar a Claude por el catálogo, el stock o las ventas («¿qué tengo que reponer?», «¿cuánto hemos vendido este mes?»). Ver [mcp-server/README.md](mcp-server/README.md).
+
 ## Decisiones técnicas
 
 - **Catálogo genérico.** Un solo `ProductoController`/`ProductoService` en el backend y un solo listado, ficha y formulario en el frontend sirven a las 6 categorías. Las tablas usan herencia JOINED. Añadir una categoría supone crear su entidad y su DTO, y añadir una entrada al enum `CategoriaProducto` y otra a `catalogo.ts`. Antes había seis copias de todo (unas 5.000 líneas menos).
@@ -98,6 +100,7 @@ Para probar el webhook en local: `stripe listen --forward-to localhost:8081/api/
 cd backend && ./mvnw verify           # 34 unitarios + 9 de integración (MariaDB real con Testcontainers; necesita Docker)
 cd frontend && npm run test:ci        # 31 tests (Karma + Chrome headless)
 cd frontend && npm run i18n:check     # es/en completos y sin claves sin traducir
+cd mcp-server && npm test             # herramientas MCP con un fetch simulado (npm run smoke: contra el backend)
 ```
 
 La integración continua (`.github/workflows/ci.yml`) ejecuta todo esto en cada push y pull request.
@@ -113,6 +116,7 @@ frontend/  Angular 20 standalone
   core/         catalogo.ts (definición de categorías), servicios, interceptor, guards
   features/     productos/{listado,detalle}, cart, pago-completado, dashboard, login, twofactor, ...
   shared/       product-card, google-login-button, price pipe
+mcp-server/ Servidor MCP (TypeScript, stdio) sobre la API
 docs/screenshots/
 ```
 

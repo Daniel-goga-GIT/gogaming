@@ -1,0 +1,27 @@
+{
+  "name": "gogaming-mcp-server",
+  "version": "1.0.0",
+  "description": "Servidor MCP de GoGaming: buscar productos, consultar stock y resumen de pedidos a través de la API",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "gogaming-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsc && node --test dist/*.test.js",
+    "smoke": "tsc && node scripts/smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.7",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "gogaming": {
+      "command": "node",
+      "args": ["mcp-server/dist/index.js"],
+      "env": {
+        "GOGAMING_API_URL": "${GOGAMING_API_URL:-http://localhost:8081/api/v1}",
+        "GOGAMING_WEB_URL": "${GOGAMING_WEB_URL:-http://localhost:4200}",
+        "GOGAMING_ADMIN_TOKEN": "${GOGAMING_ADMIN_TOKEN:-}"
+      }
+    }
+  }
+}

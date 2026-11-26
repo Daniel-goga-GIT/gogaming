@@ -8,7 +8,7 @@ Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Respo
 
 - `backend/`: Spring Boot 4.0.1, Java 21, Maven (`mvnw`), MariaDB (docker-compose), JPA.
   Seguridad con JWT (keystore), 2FA por email, OAuth2 con Google, pagos con Stripe Checkout, reseñas y Swagger (springdoc).
-  Paquete base: `org.iesalixar.daw2.alejandromontero.ticket_logger_api` (viene de la plantilla de clase; se renombrará).
+  Paquete base: `com.gogaming` (clase principal `GogamingApplication`; artifact `gogaming-api`). Swagger: `/swagger-ui-custom.html` (JSON en `/api-docs`).
   Esquema y datos: `src/main/resources/schema.sql`, `data.sql`. Configuración por `.env` (dotenv-java).
 - `frontend/`: Angular 20 (standalone, SSR), Tailwind, ngx-translate (es/en), Karma/Jasmine.
   Catálogo genérico: `core/catalogo.ts` (las 6 categorías: ruta, título, campos, icono) + `ProductoService`.
@@ -27,7 +27,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 2. `.env` y `.env.produc` tienen secretos reales (Stripe, Google, SMTP, JWT). Ya se han añadido al `.gitignore`. Los repositorios originales son **públicos**, así que hay que cambiar todas las claves. Borrarlas del repositorio no basta, porque siguen en el historial.
 3. ~~El catálogo exigía login~~ → ya es público; el login se pide solo al pagar, al escribir reseñas y en el perfil.
 4. ~~Código repetido por categoría~~ → backend y frontend unificados el 26 nov (ver «Catálogo genérico»).
-5. `pom.xml`: dependencias duplicadas (mariadb, security), Thymeleaf sin usar, `data-jdbc` junto a JPA, `annotations:RELEASE`. El artifact se llama `ticket-logger-api`.
+5. ~~`pom.xml` con dependencias duplicadas y sin usar~~ → limpiado el 26 nov. También se ha renombrado el paquete y springdoc pasa a 3.0.3 (la rama de Spring Boot 4).
 6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. Los tests son casi todos los generados por defecto y **10 de los 12 del frontend fallan** (no declaran `HttpClient` ni el router). No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).

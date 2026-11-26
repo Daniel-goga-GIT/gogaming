@@ -1,0 +1,15 @@
+package com.gogaming.dtos;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class AuthResponseDTO {
+    private String token;
+    private String message;
+    //Metemos uno nuevo para el Factor 2FA
+    private boolean twofactor;
+}

@@ -11,7 +11,8 @@ Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Respo
   Paquete base: `org.iesalixar.daw2.alejandromontero.ticket_logger_api` (viene de la plantilla de clase; se renombrará).
   Esquema y datos: `src/main/resources/schema.sql`, `data.sql`. Configuración por `.env` (dotenv-java).
 - `frontend/`: Angular 20 (standalone, SSR), Tailwind, ngx-translate (es/en), Karma/Jasmine.
-  `src/app/core/services`: un servicio por categoría. `features/productos/<categoria>`: listado y detalle.
+  Catálogo genérico: `core/catalogo.ts` (las 6 categorías: ruta, título, campos, icono) + `ProductoService`.
+  `features/productos/listado` y `features/productos/detalle` sirven para todas las categorías (ver «Catálogo genérico»).
   `layout/ai-chat`: chat con IA (OpenRouter).
   API: `src/environments/environments.ts`.
 
@@ -25,11 +26,11 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 1. ~~API key de OpenRouter en el frontend~~ → revocada; ahora el chat pasa por el backend (`POST /api/v1/chat`).
 2. `.env` y `.env.produc` tienen secretos reales (Stripe, Google, SMTP, JWT). Ya se han añadido al `.gitignore`. Los repositorios originales son **públicos**, así que hay que cambiar todas las claves. Borrarlas del repositorio no basta, porque siguen en el historial.
 3. ~~El catálogo exigía login~~ → ya es público; el login se pide solo al pagar, al escribir reseñas y en el perfil.
-4. Código repetido por categoría: ~~backend~~ → unificado (26 nov, ver «Catálogo genérico»). **Pendiente en el frontend**: un servicio Angular, un listado y un detalle por cada categoría.
+4. ~~Código repetido por categoría~~ → backend y frontend unificados el 26 nov (ver «Catálogo genérico»).
 5. `pom.xml`: dependencias duplicadas (mariadb, security), Thymeleaf sin usar, `data-jdbc` junto a JPA, `annotations:RELEASE`. El artifact se llama `ticket-logger-api`.
 6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
-8. Los tests son casi todos los generados por defecto. No hay README. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
+8. Los tests son casi todos los generados por defecto y **10 de los 12 del frontend fallan** (no declaran `HttpClient` ni el router). No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
 9. Revisado solo por encima: panel de admin (`/dashboard`), login/registro/2FA y el flujo de Google OAuth (el `FRONTEND_OAUTH2_REDIRECT_URI` del `.env` apunta mal: `https://localhost:8080/oauth2/callback`).
 10. ~~`permitAll` de productos sin filtrar por método~~ → ahora solo `GET /api/v1/productos/**` es público.
 
@@ -62,12 +63,14 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Todos los textos visibles van en `assets/i18n/es.json` y `en.json`, nunca escritos en la plantilla. Categorías: `CATEGORY.<tipoProducto>`.
 - Enlaces internos con `routerLink`, nunca `href`, porque `href` recarga toda la app.
 - Buscador global: `/buscar?q=` (busca por nombre o marca en las 6 categorías).
-- Las peticiones solo llevan `Authorization` si hay token (`Bearer null` rompe los endpoints públicos).
+- `core/auth.interceptor.ts` añade `Authorization` a las peticiones a nuestra API, y solo si hay token (`Bearer null` rompe los endpoints públicos). Los servicios nuevos no tienen que añadir cabeceras.
 - Roles: `AuthService.isAdmin()` / `hasRole()` (el JWT puede tener varios roles).
 - Revisión visual: script de Playwright con el Chrome del sistema (capturas en escritorio 1366 y móvil 390; usuario QA admin `danielgongar8+qa@gmail.com`, código 2FA leído de la tabla `usuarios.code`).
   También hay un usuario de pruebas sin permisos de admin, `danielgongar8+e2e@gmail.com` (id 68). Se usó para el pago E2E. En Stripe Checkout, el formulario de tarjeta está dentro del iframe `elements-inner-habanero`.
 
-## Catálogo genérico (backend)
+## Catálogo genérico
+
+Backend:
 
 - Un solo `ProductoController` (`/api/v1/productos`) + `ProductoService` + `ProductoRepository` para las 6 categorías. Las URLs y el JSON no han cambiado.
 - `CategoriaProducto` (enum) une el segmento de la URL (`raton`, `teclado`, `skate`, `alfombrilla`, `auriculares`, `manga`) con `TipoProducto`, la entidad y el DTO. Añadir una categoría = entidad + DTO + una línea en el enum.
@@ -75,6 +78,12 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 - Entidad ↔ DTO con el `ObjectMapper` de Jackson 3 (mismos nombres de campo). `tipoProducto` lo fija el servidor según la URL.
 - Solo se puede ordenar por campos comunes (`id`, `nombre`, `marca`, `precio`, `stock`, `fechaPublicacion`); se añade `id` como desempate.
 - `GET /api/v1/productos/{id}` (numérico) devuelve un producto de cualquier categoría. `/home`: los 5 primeros ratones.
+
+Frontend:
+- `core/catalogo.ts`: equivalente del enum. Por categoría guarda el slug, `tipoProducto`, la ruta del listado (`/ratones`, `/iem-cascos`...), el título i18n, los campos (tipo, unidad, ejemplo, si son opcionales), los campos del resumen y el icono. Funciones: `categoriaPorSlug/Tipo`, `rutaProducto(p)` → `/productos/{slug}/{id}` y `urlImagen`.
+- Rutas: un `ListadoProductos` por categoría (`data.categoria`) y `DetalleProducto` en `productos/:categoria/:id` (categoría o id desconocidos → «producto no encontrado»).
+- La tabla de especificaciones de la ficha, y la tabla y el formulario del dashboard, se generan a partir de `campos`. Etiquetas: `SPECS.*`. Textos del dashboard: `ADMIN.*`.
+- Añadir una categoría = backend (entidad + DTO + enum) + una entrada en `catalogo.ts` + textos i18n + enlace en el header.
 
 ## Pagos con Stripe
 
@@ -100,9 +109,10 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 ## Próximos pasos (por orden)
 
 1. ~~Probar un pago completo con la tarjeta 4242~~ → hecho el 26 nov con Playwright: pedido creado, stock descontado, confirmación idempotente y email enviado.
-2. Refactor del frontend: un servicio Angular, un listado y un detalle genéricos en lugar de 6 copias (el backend ya está unificado). `CartFeedbackService` y `ProductCard` ya están unificados.
+2. ~~Refactor del catálogo~~ → backend y frontend genéricos (26 nov). El dashboard también es genérico, con textos i18n y errores de validación del backend en los avisos.
 3. Limpieza: `pom.xml` (dependencias duplicadas, Thymeleaf, `data-jdbc`, `annotations:RELEASE`), Tailwind 3/4 mezclados y renombrar el paquete a `com.gogaming`.
-4. Revisar dashboard, login/registro/2FA y OAuth.
+4. Revisar login/registro/2FA y OAuth. Dashboard: falta paginar la tabla (hoy carga hasta 500 productos) y cambiar el estado de los pedidos.
+   Las valoraciones se piden una a una por producto (N peticiones por página): estaría bien un endpoint por lotes. `RatingService` usa `/productos/raton/{id}/resenas` para todas las categorías (funciona, pero la URL engaña).
 5. Tests + README con capturas.
 6. Servidor MCP (`mcp-server/`) sobre la API: buscar productos, consultar stock y resumen de pedidos.
 7. Despliegue (frontend + backend + BD gestionada) y webhook de Stripe en producción.

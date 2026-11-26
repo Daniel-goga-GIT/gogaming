@@ -12,30 +12,9 @@ import { Me } from './features/me/me';
 import { Cart } from './features/cart/cart';
 import { PagoCompletado } from './features/pago-completado/pago-completado';
 
-// Ratones
-import { Ratones } from './features/productos/ratones/ratones';
-import { RatonDetail } from './features/productos/ratones/raton-detail/raton-detail';
-
-// Teclados
-import { Teclados } from './features/productos/teclados/teclados';
-import { TecladoDetail } from './features/productos/teclados/teclado-detail/teclado-detail';
-
-// Skates
-import { Skates } from './features/productos/skates/skates';
-import { SkateDetail } from './features/productos/skates/skate-detail/skate-detail';
-
-// Alfombrillas
-import { Alfombrillas } from './features/productos/alfombrillas/alfombrillas';
-import { AlfombrillaDetail } from './features/productos/alfombrillas/alfombrilla-detail/alfombrilla-detail';
-
-// Auriculares
-import { Auriculares } from './features/productos/auriculares/auriculares';
-import { AuricularDetail } from './features/productos/auriculares/auricular-detail/auricular-detail';
-
-// Mangas
-import { Mangas } from './features/productos/mangas/mangas';
-import { MangaDetail } from './features/productos/mangas/manga-detail/manga-detail';
-
+import { ListadoProductos } from './features/productos/listado/listado-productos';
+import { DetalleProducto } from './features/productos/detalle/detalle-producto';
+import { CATEGORIAS } from './core/catalogo';
 
 import { authGuard } from './core/guards/auth-guard';
 import { authGuardLogin } from './core/guards/auth-login';
@@ -49,31 +28,11 @@ export const routes: Routes = [
   { path: 'buscar', component: Buscar },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
-  
 
-  // Ratones
-  { path: 'ratones', component: Ratones },
-  { path: 'productos/raton/:id', component: RatonDetail },
 
-  // Teclados
-  { path: 'teclados', component: Teclados },
-  { path: 'productos/teclado/:id', component: TecladoDetail },
-
-  // Skates
-  { path: 'skates', component: Skates },
-  { path: 'productos/skate/:id', component: SkateDetail },
-
-  // Alfombrillas
-  { path: 'alfombrillas', component: Alfombrillas },
-  { path: 'productos/alfombrilla/:id', component: AlfombrillaDetail },
-
-  // Auriculares (ruta del header: /iem-cascos)
-  { path: 'iem-cascos', component: Auriculares },
-  { path: 'productos/auriculares/:id', component: AuricularDetail },
-
-  // Mangas
-  { path: 'mangas', component: Mangas },
-  { path: 'productos/manga/:id', component: MangaDetail },
+  // Catálogo: un listado por categoría (/ratones, /teclados, ...) y una ficha común.
+  ...CATEGORIAS.map(c => ({ path: c.ruta.slice(1), component: ListadoProductos, data: { categoria: c.slug } })),
+  { path: 'productos/:categoria/:id', component: DetalleProducto },
 
   // Carrito y pagos
   { path: 'cesta', component: Cart },

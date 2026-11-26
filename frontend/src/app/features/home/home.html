@@ -40,7 +40,7 @@
 
   <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6">
     <app-product-card *ngFor="let raton of ratones"
-      [product]="raton" [link]="['/productos/raton', raton.id]" [image]="getImageUrl(raton.image)"
+      [product]="raton" [link]="rutaProducto(raton)" [image]="getImageUrl(raton.image)"
       [rating]="getRatingValue(raton.id)" [reviews]="getOpiniones(raton.id)" [featured]="true">
     </app-product-card>
   </div>

@@ -1,27 +1,12 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { catchError, forkJoin, map, of, switchMap, tap } from 'rxjs';
-import { environment } from '../../../environments/environments';
+import { CATEGORIAS, rutaProducto, urlImagen } from '../../core/catalogo';
+import { ProductoService } from '../../core/services/producto.service';
 import { ProductoDTO } from '../../models/types';
 import { ProductCard } from '../../shared/product-card/product-card';
-
-/** Categorías del catálogo: endpoint de la API y ruta de la ficha en el frontend. */
-const CATEGORIES = [
-  { api: 'raton', route: '/productos/raton' },
-  { api: 'teclado', route: '/productos/teclado' },
-  { api: 'skate', route: '/productos/skate' },
-  { api: 'alfombrilla', route: '/productos/alfombrilla' },
-  { api: 'auriculares', route: '/productos/auriculares' },
-  { api: 'manga', route: '/productos/manga' },
-] as const;
-
-interface SearchResult {
-  product: ProductoDTO;
-  route: string;
-}
 
 /**
  * Buscador global: busca por nombre o marca en todas las categorías a la vez.
@@ -58,8 +43,8 @@ interface SearchResult {
       } @else if (query()) {
         <p class="mt-2 text-sm text-gray-500">{{ 'SEARCH.COUNT' | translate: { count: results().length } }}</p>
         <div class="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6">
-          @for (r of results(); track r.route + r.product.id) {
-            <app-product-card [product]="r.product" [link]="[r.route, r.product.id]" [image]="r.product.image" />
+          @for (p of results(); track p.id) {
+            <app-product-card [product]="p" [link]="rutaProducto(p)" [image]="urlImagen(p.image)" />
           }
         </div>
       }
@@ -67,11 +52,13 @@ interface SearchResult {
   `,
 })
 export class Buscar {
-  private http = inject(HttpClient);
+  private productoService = inject(ProductoService);
   private route = inject(ActivatedRoute);
 
   protected readonly query = signal('');
-  protected readonly results = signal<SearchResult[]>([]);
+  protected readonly results = signal<ProductoDTO[]>([]);
+  protected readonly rutaProducto = rutaProducto;
+  protected readonly urlImagen = urlImagen;
   protected readonly loading = signal(false);
   protected readonly error = signal(false);
   protected readonly skeleton = [1, 2, 3, 4, 5];
@@ -95,14 +82,14 @@ export class Buscar {
       });
   }
 
+  /** Busca en las 6 categorías a la vez; si alguna falla, muestra el resto y avisa. */
   private search(q: string) {
-    const params = new HttpParams().set('nombre', q).set('size', '50').set('sort', 'nombre,asc');
-    const requests = CATEGORIES.map(c =>
-      this.http.get<{ content: ProductoDTO[] }>(`${environment.apiUrl}/v1/productos/${c.api}`, { params }).pipe(
-        map(page => (page?.content ?? []).map(product => ({ product, route: c.route }))),
+    const requests = CATEGORIAS.map(c =>
+      this.productoService.listar(c.slug, { nombre: q, size: 50, sort: 'nombre' }).pipe(
+        map(page => page?.content ?? []),
         catchError(() => {
           this.error.set(true);
-          return of([] as SearchResult[]);
+          return of([] as ProductoDTO[]);
         }),
       ),
     );

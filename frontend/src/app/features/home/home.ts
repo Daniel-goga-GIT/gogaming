@@ -2,8 +2,9 @@ import { ProductCard } from '../../shared/product-card/product-card';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ProductRatingSummary, RatonDTO } from '../../models/types';
-import { RatonService } from '../../core/services/inicio.service';
+import { ProductRatingSummary, ProductoDTO } from '../../models/types';
+import { ProductoService } from '../../core/services/producto.service';
+import { rutaProducto, urlImagen } from '../../core/catalogo';
 import { TranslateModule } from '@ngx-translate/core';
 import { RatingService } from '../../core/services/rating.service';
 
@@ -14,16 +15,17 @@ import { RatingService } from '../../core/services/rating.service';
   styleUrl: './home.css'
 })
 export class Home implements OnInit {
-  ratones: RatonDTO[] = [];
+  ratones: ProductoDTO[] = [];
+  protected readonly rutaProducto = rutaProducto;
   ratingSummaryMap: Record<number, ProductRatingSummary> = {};
 
   constructor(
-    private ratonService: RatonService,
+    private productoService: ProductoService,
     private ratingService: RatingService
   ) {}
 
   ngOnInit(): void {
-    this.ratonService.getHomeRatones().subscribe({
+    this.productoService.portada().subscribe({
       next: (data) => {
         this.ratones = data;
         this.loadRatingsForHome();
@@ -35,8 +37,7 @@ export class Home implements OnInit {
   }
 
   getImageUrl(url: string): string {
-    if (!url) return 'ejemplo.png';
-    return url.replace(/\"/g, '').trim();
+    return urlImagen(url);
   }
 
   loadRatingsForHome(): void {

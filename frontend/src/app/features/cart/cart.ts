@@ -10,6 +10,7 @@ import { TicketService } from '../../core/services/ticket.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CartItem, CreateCheckoutRequest } from '../../models/types';
 import { Subscription } from 'rxjs';
+import { rutaProducto, urlImagen } from '../../core/catalogo';
 
 @Component({
   selector: 'app-cart',
@@ -93,26 +94,8 @@ export class Cart implements OnInit, OnDestroy {
     this.cartService.removeFromCart(productId); // Delega el borrado al servicio
   }
 
-  getProductDetailRoute(tipoProducto: string, id: number): any[] {
-    const routeMap: { [key: string]: string } = {
-      'Raton': 'raton',
-      'Teclado': 'teclado',
-      'Skate': 'skate',
-      'Alfombrilla': 'alfombrilla',
-      'Auriculares': 'auriculares',
-      'Manga': 'manga'
-    };
-    const segment = routeMap[tipoProducto] || 'raton';
-    return [`/productos/${segment}`, id];
-  }
-
-  // Procesa la URL de la imagen para asegurar que sea válida
-  getImageUrl(url: string): string {
-    if (!url) {
-      return 'ejemplo.png';
-    }
-    return url.replace(/\"/g, '').trim();
-  }
+  protected readonly rutaProducto = rutaProducto;
+  protected readonly getImageUrl = urlImagen;
 
   /** Lleva al cliente a la página de pago de Stripe (pide login antes si hace falta). */
   completarpago() {

@@ -79,6 +79,15 @@ export interface MangaDTO extends ProductoDTO {
   color: string;
 }
 
+/** Página de resultados de Spring Data. */
+export interface Pagina<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+}
+
 export interface CartItem {
   product: ProductoDTO;
   quantity: number;

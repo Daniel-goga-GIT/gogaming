@@ -11,6 +11,7 @@ import { Twofactor } from './features/twofactor/twofactor'
 import { Me } from './features/me/me';
 import { Cart } from './features/cart/cart';
 import { PagoCompletado } from './features/pago-completado/pago-completado';
+import { OAuthCallback } from './features/oauth-callback/oauth-callback';
 
 import { ListadoProductos } from './features/productos/listado/listado-productos';
 import { DetalleProducto } from './features/productos/detalle/detalle-producto';
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'buscar', component: Buscar },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
+  { path: 'oauth2/callback', component: OAuthCallback },
 
 
   // Catálogo: un listado por categoría (/ratones, /teclados, ...) y una ficha común.

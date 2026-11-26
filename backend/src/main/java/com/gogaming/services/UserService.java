@@ -85,9 +85,10 @@ public class UserService {
 
         String fileName = null;
         if (userCreateDTO.getImageFile() != null && !userCreateDTO.getImageFile().isEmpty()){
-            fileName = fileStorageService.saveFile(userCreateDTO.getImageFile());
-            if (fileName == null) {
-                throw new RuntimeException("Error al cargar imagen");
+            try {
+                fileName = fileStorageService.saveFile(userCreateDTO.getImageFile());
+            } catch (java.io.IOException e) {
+                throw new RuntimeException("Error al cargar imagen", e);
             }
         }
         user.setImage(fileName);
@@ -110,25 +111,21 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
 
-        // 2. LÓGICA DE BORRADO: Si ya tenía imagen, la eliminamos físicamente
-        if (user.getImage() != null && !user.getImage().isEmpty()) {
-            try {
-                fileStorageService.deleteFile(user.getImage());
-                logger.info("Imagen antigua eliminada: {}", user.getImage());
-            } catch (Exception e) {
-                // Logueamos pero seguimos adelante para no interrumpir la subida
-                logger.warn("No se pudo eliminar el archivo físico: {}", user.getImage());
-            }
+        // Primero se guarda la nueva (si no es válida, el usuario conserva la anterior)...
+        String anterior = user.getImage();
+        String fileName;
+        try {
+            fileName = fileStorageService.saveFile(file);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Error al guardar la imagen en el servidor", e);
         }
-        // 3. Guardamos el nuevo archivo
-        String fileName = fileStorageService.saveFile(file);
-        if (fileName == null) {
-            throw new RuntimeException("Error al guardar la imagen en el servidor");
-        }
-        // 4. Actualizamos y guardamos
         user.setImage(fileName);
         User savedUser = userRepository.save(user);
 
+        // ...y después se borra la antigua.
+        if (anterior != null && !anterior.isEmpty()) {
+            fileStorageService.deleteFile(anterior);
+        }
         return userMapper.toDTO(savedUser);
     }
 

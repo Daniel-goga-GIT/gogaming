@@ -361,5 +361,22 @@
     "TOTAL": "Total",
     "METHOD": "Método",
     "STATUS": "Estado"
+  },
+  "TWOFACTOR": {
+    "TITLE": "Verificación en dos pasos",
+    "INTRO": "Introduce el código de 6 cifras que te hemos enviado por email.",
+    "EXPIRES": "El código caduca en",
+    "CODE": "Código de verificación",
+    "SUBMIT": "Confirmar código",
+    "SUBMITTING": "Comprobando…",
+    "FORMAT": "El código tiene 6 cifras.",
+    "INVALID": "El código no es correcto o ha caducado. Si has fallado varias veces, vuelve a iniciar sesión para recibir uno nuevo.",
+    "HELP": "¿No te ha llegado? Revisa la carpeta de spam o",
+    "RESTART": "vuelve a iniciar sesión."
+  },
+  "OAUTH": {
+    "PROCESSING": "Iniciando sesión con Google…",
+    "ERROR_TITLE": "No se ha podido iniciar sesión con Google",
+    "ERROR_MSG": "Inténtalo de nuevo o entra con tu email y contraseña."
   }
 }

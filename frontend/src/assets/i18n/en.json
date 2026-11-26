@@ -361,5 +361,22 @@
     "TOTAL": "Total",
     "METHOD": "Method",
     "STATUS": "Status"
+  },
+  "TWOFACTOR": {
+    "TITLE": "Two-step verification",
+    "INTRO": "Enter the 6-digit code we have sent to your email.",
+    "EXPIRES": "The code expires in",
+    "CODE": "Verification code",
+    "SUBMIT": "Confirm code",
+    "SUBMITTING": "Checking…",
+    "FORMAT": "The code has 6 digits.",
+    "INVALID": "The code is wrong or has expired. If you have failed several times, log in again to get a new one.",
+    "HELP": "Didn't get it? Check your spam folder or",
+    "RESTART": "log in again."
+  },
+  "OAUTH": {
+    "PROCESSING": "Signing in with Google…",
+    "ERROR_TITLE": "We couldn't sign you in with Google",
+    "ERROR_MSG": "Please try again or use your email and password."
   }
 }

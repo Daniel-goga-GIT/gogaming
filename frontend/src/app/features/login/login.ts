@@ -1,3 +1,4 @@
+import { GoogleLoginButton } from '../../shared/google-login-button/google-login-button';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
 import { Router, RouterLink } from '@angular/router';
@@ -11,7 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule, RouterLink, TranslateModule],
+  imports: [GoogleLoginButton, FormsModule, CommonModule, RouterLink, TranslateModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

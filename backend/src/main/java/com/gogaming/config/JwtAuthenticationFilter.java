@@ -1,16 +1,20 @@
 package com.gogaming.config;
 
+import com.gogaming.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.gogaming.services.CustomUserDetailsService;
-import com.gogaming.utils.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,80 +22,68 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Autentica la petición con el JWT de la cabecera Authorization.
+ *
+ * - Un token no válido o caducado se ignora: la petición sigue como anónima. Así los endpoints
+ *   públicos (el catálogo) funcionan aunque el navegador guarde un token viejo, y los protegidos
+ *   responden 401 como siempre.
+ * - Un token pendiente de 2FA no autentica nunca: solo lo acepta /api/v1/twofactor, que lo lee por su cuenta.
+ */
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter { //
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService; // Servicio personalizado para cargar detalles del usuario
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
 
-    
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // 1. Extraer el encabezado Authorization de la solicitud
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;        // Variable para almacenar el token JWT
-        final String username;   // Variable para almacenar el nombre de usuario extraído del token
-
-        // 2. Verificar si el encabezado Authorization está presente y tiene un token válido
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // Si el encabezado no está presente o no comienza con "Bearer ", pasa la solicitud al siguiente filtro
-            filterChain.doFilter(request, response);
-            return; // Termina la ejecución de este filtro
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
+            autenticar(authHeader.substring(7), request);
         }
-
-        // 3. Extraer el token JWT del encabezado (sin el prefijo "Bearer ")
-        jwt = authHeader.substring(7); // Elimina los primeros 7 caracteres ("Bearer ")
-
-        // 4. Extraer el nombre de usuario (claim "sub") del token
-        username = jwtUtil.getUsername(jwt);
-
-        // 5. Verificar si:
-        // - El nombre de usuario extraído no es nulo
-        // - No hay una autenticación existente en el contexto de seguridad
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // 6. Cargar los detalles del usuario desde el servicio personalizado
-            var userDetails = userDetailsService.loadUserByUsername(username);
-
-            // 7. Validar el token JWT con el nombre de usuario del usuario cargado
-            if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
-                // 8. Extraer los claims del token (como los roles)
-                Claims claims = jwtUtil.extractAllClaims(jwt);
-
-
-                // Lógica de bloqueo
-                Boolean is2FARequest = claims.get("twoFactor", Boolean.class);
-
-                final String requestPath = request.getServletPath(); // [NUEVO] Obtener la ruta actual
-
-                // Si el 2FA no está completo y el usuario NO está yendo al endpoint de validación:
-                if (Boolean.TRUE.equals(is2FARequest) && !requestPath.contains("/twofactor")) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"error\":\"Pendiente completar segundo factor de autenticacion.\"}");
-                    return;
-                }
-
-                
-
-                // 9. Extraer los roles del claim "roles" y convertirlos en GrantedAuthority
-                List<String> roles = claims.get("roles", List.class); // Obtiene la lista de roles del token
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new) // Convierte cada rol en SimpleGrantedAuthority
-                        .toList();
-
-                // 10. Crear un objeto UsernamePasswordAuthenticationToken con los detalles del usuario y sus roles
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-
-                // 11. Configurar los detalles adicionales de la solicitud actual (por ejemplo, dirección IP)
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // 12. Establecer la autenticación en el contexto de seguridad de Spring
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
-        }
-        // 13. Continuar con el siguiente filtro en la cadena de filtros
         filterChain.doFilter(request, response);
+    }
+
+    private void autenticar(String jwt, HttpServletRequest request) {
+        Claims claims;
+        try {
+            claims = jwtUtil.extractAllClaims(jwt);
+        } catch (JwtException | IllegalArgumentException e) {
+            logger.debug("JWT ignorado ({}): {}", request.getRequestURI(), e.getMessage());
+            return;
+        }
+
+        if (jwtUtil.isPendingTwoFactor(claims) || claims.getSubject() == null) {
+            return;
+        }
+
+        UserDetails userDetails;
+        try {
+            userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
+        } catch (UsernameNotFoundException e) {
+            return; // el usuario se ha borrado después de emitir el token
+        }
+        if (!userDetails.isEnabled()) {
+            return;
+        }
+
+        @SuppressWarnings("unchecked")
+        List<String> roles = claims.get("roles", List.class);
+        List<SimpleGrantedAuthority> authorities = roles == null ? List.of()
+                : roles.stream().map(SimpleGrantedAuthority::new).toList();
+
+        var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }

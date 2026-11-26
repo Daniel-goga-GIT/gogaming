@@ -1,3 +1,4 @@
+import { GoogleLoginButton } from '../../shared/google-login-button/google-login-button';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, TranslateModule],
+  imports: [GoogleLoginButton, ReactiveFormsModule, CommonModule, RouterLink, TranslateModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })

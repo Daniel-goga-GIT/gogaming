@@ -4,6 +4,7 @@ import com.gogaming.services.CustomUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -39,6 +40,9 @@ public class SecurityConfig {
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
+    @Value("${app.frontend.oauth2.redirect-uri}")
+    private String frontendOAuth2RedirectUri;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -47,6 +51,8 @@ public class SecurityConfig {
                 // El login con OAuth2 necesita una sesion HTTP para mantener el estado de autorizacion.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
+                        // Las respuestas de error de Spring pasan por /error: si no fuera pública, cualquier 400 o 500 llegaría como 401.
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/payments/webhook").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/chat").permitAll()
@@ -82,6 +88,9 @@ public class SecurityConfig {
                                 .baseUri("/oauth2/callback")
                         )
                         .successHandler(oAuth2AuthenticationSuccessHandler)
+                        // Si el usuario cancela en Google o algo falla, vuelve al frontend con el error.
+                        .failureHandler((request, response, exception) ->
+                                response.sendRedirect(frontendOAuth2RedirectUri + "#error=oauth"))
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

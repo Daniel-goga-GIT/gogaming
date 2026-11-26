@@ -27,13 +27,16 @@ public class User {
     @Column(name = "correo_electronico", nullable = false, unique = true)
     private String email;
 
+    /** Código 2FA pendiente. Fuera del toString para que no acabe en los logs. */
     @Column(name = "code")
+    @lombok.ToString.Exclude
     private String code;
 
     @Column(name = "image")
     private String image;
 
     @Column(name = "contrasena", nullable = false)
+    @lombok.ToString.Exclude
     private String password;
 
     @Column(nullable = false)

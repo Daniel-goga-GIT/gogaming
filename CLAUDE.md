@@ -31,13 +31,13 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 6. ~~Tailwind 3 y 4 mezclados~~ → solo Tailwind 3.4 (Angular lo detecta por `tailwind.config.js`; `postcss.config.js` no se usaba). Pasar a la v4 cambiaría valores por defecto y obligaría a revisar toda la UI.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. Los tests son casi todos los generados por defecto y **10 de los 12 del frontend fallan** (no declaran `HttpClient` ni el router). No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
-9. Revisado solo por encima: panel de admin (`/dashboard`), login/registro/2FA y el flujo de Google OAuth (el `FRONTEND_OAUTH2_REDIRECT_URI` del `.env` apunta mal: `https://localhost:8080/oauth2/callback`).
+9. ~~Login/registro/2FA y OAuth sin revisar~~ → revisados el 26 nov (ver «Autenticación»). Para que funcione Google falta **añadir `http://localhost:8081/oauth2/callback` como URI de redirección autorizada** en Google Cloud Console (hoy Google responde `redirect_uri_mismatch`).
 10. ~~`permitAll` de productos sin filtrar por método~~ → ahora solo `GET /api/v1/productos/**` es público.
 
 ## Estado de las claves (23 nov 2026)
 
 `.env` local actualizado con claves nuevas: OpenRouter (`OPENROUTER_API_KEY`, todavía no se usa en el código), Stripe (cuenta Sandbox nueva), Google OAuth (secret nuevo) y Gmail SMTP (`MAIL_USERNAME` + contraseña de aplicación).
-Pendiente: generar un JWT secret y un keystore nuevos. `.env.produc` sigue con valores antiguos y filtrados: rehacerlo al desplegar.
+`JWT_SECRET` no se usa: los JWT se firman con RS256 con el keystore. Pendiente: generar un keystore nuevo (el antiguo pudo filtrarse). `.env.produc` sigue con valores antiguos y filtrados: rehacerlo al desplegar.
 Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y Google).
 
 ## Convenciones
@@ -85,6 +85,15 @@ Frontend:
 - La tabla de especificaciones de la ficha, y la tabla y el formulario del dashboard, se generan a partir de `campos`. Etiquetas: `SPECS.*`. Textos del dashboard: `ADMIN.*`.
 - Añadir una categoría = backend (entidad + DTO + enum) + una entrada en `catalogo.ts` + textos i18n + enlace en el header.
 
+## Autenticación
+
+- Login en dos pasos: `POST /authenticate` (email + contraseña) → token **pendiente de 2FA** (claim `twofactor=true`, 5 min) + código de 6 cifras por email (`SecureRandom`). `POST /twofactor` con ese token y el código → token completo (1 h).
+- `JwtAuthenticationFilter`: un token pendiente de 2FA **no autentica nunca**. Un token inválido o caducado se ignora (la petición sigue como anónima, así el catálogo funciona aunque el navegador guarde un token viejo).
+- 2FA: 5 códigos erróneos invalidan el código; comparación en tiempo constante; el código no se puede reutilizar.
+- Google: botón `shared/google-login-button` → `/oauth2/authorization/google` (backend) → Google → `/oauth2/callback` (backend) → `FRONTEND_BASE_URL/oauth2/callback#token=…` (frontend, `features/oauth-callback`). Fallos → `#error=…`. Solo se aceptan emails verificados por Google. Google hace de segundo factor.
+- Registro validado también en el servidor (email, nombre, contraseña de 8+ caracteres con mayúscula y número). Fotos de perfil: solo JPG/PNG/WebP/GIF (por extensión y por los primeros bytes), servidas con `nosniff` y sin poder salir de `UPLOAD_PATH`.
+- `/error` es público: si no, Spring Security convertía cualquier 400/500 en 401.
+
 ## Pagos con Stripe
 
 - `StripePaymentService` (stripe-java 34.2.0, `StripeClient`). Cuenta Stripe **Sandbox** solo para GoGaming (modo test).
@@ -111,7 +120,7 @@ Frontend:
 1. ~~Probar un pago completo con la tarjeta 4242~~ → hecho el 26 nov con Playwright: pedido creado, stock descontado, confirmación idempotente y email enviado.
 2. ~~Refactor del catálogo~~ → backend y frontend genéricos (26 nov). El dashboard también es genérico, con textos i18n y errores de validación del backend en los avisos.
 3. ~~Limpieza: `pom.xml`, Tailwind y paquete `com.gogaming`~~ → hecho el 26 nov.
-4. Revisar login/registro/2FA y OAuth. Dashboard: falta paginar la tabla (hoy carga hasta 500 productos) y cambiar el estado de los pedidos.
+4. ~~Revisar login/registro/2FA y OAuth~~ → hecho el 26 nov (había una forma de saltarse el 2FA). Pendiente: límite de intentos en `/authenticate` (fuerza bruta de contraseñas). Dashboard: falta paginar la tabla (hoy carga hasta 500 productos) y cambiar el estado de los pedidos.
    Las valoraciones se piden una a una por producto (N peticiones por página): estaría bien un endpoint por lotes. `RatingService` usa `/productos/raton/{id}/resenas` para todas las categorías (funciona, pero la URL engaña).
 5. Tests + README con capturas.
 6. Servidor MCP (`mcp-server/`) sobre la API: buscar productos, consultar stock y resumen de pedidos.

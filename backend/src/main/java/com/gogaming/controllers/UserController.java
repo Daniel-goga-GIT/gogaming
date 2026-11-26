@@ -135,7 +135,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping(value = "/me/image", consumes = "multipart/form-data")
-    public ResponseEntity<UserDTO> uploadMyImage(
+    public ResponseEntity<?> uploadMyImage(
             @RequestParam("image") org.springframework.web.multipart.MultipartFile file,
             @RequestHeader("Authorization") String tokenHeader) {
 
@@ -155,6 +155,8 @@ public class UserController {
             UserDTO updatedUser = userService.uploadImage(id, file);
 
             return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             logger.error("Error al actualizar imagen: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -162,4 +164,12 @@ public class UserController {
     }
 
 
+    /** Datos del registro no válidos: se devuelve el primer motivo como texto (lo muestra el formulario). */
+    @ExceptionHandler(org.springframework.validation.BindException.class)
+    public ResponseEntity<String> datosInvalidos(org.springframework.validation.BindException e) {
+        String mensaje = e.getBindingResult().getFieldErrors().stream()
+                .map(org.springframework.validation.FieldError::getDefaultMessage)
+                .findFirst().orElse("Datos no válidos.");
+        return ResponseEntity.badRequest().body(mensaje);
+    }
 }

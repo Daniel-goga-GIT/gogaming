@@ -25,9 +25,8 @@ public class DotenvConfig {
             dotenv.entries().forEach(entry -> {
                 // Establecer cada variable de entorno como una propiedad del sistema
                 System.setProperty(entry.getKey(), entry.getValue());
-                // Registrar en el log el valor de cada variable cargada para fines de depuración (nivel DEBUG)
-                logger.debug("Set system property: {} = {}", entry.getKey(),
-                        entry.getValue());
+                // Solo el nombre: los valores son secretos y no deben acabar en los logs.
+                logger.debug("Set system property: {}", entry.getKey());
             });
             // Registrar en el log un mensaje informativo indicando que el archivo .env se cargó correctamente
             logger.info(".env file loaded successfully.");

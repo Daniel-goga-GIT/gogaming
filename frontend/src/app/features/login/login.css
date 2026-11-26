@@ -424,15 +424,3 @@
         gap: 5px;
     }
 }
-
-.btn-disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    filter: grayscale(100%);
-    pointer-events: disable;
-}
-.btn-disabled:hover {
-    transform: none;
-    box-shadow: none;
-}
-

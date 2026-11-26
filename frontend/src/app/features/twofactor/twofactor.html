@@ -1,48 +1,43 @@
 <div class="min-h-[60vh] bg-white flex flex-col items-center pt-10 pb-16 px-4">
   <div class="w-full max-w-md mt-10">
-    <h1 class="text-3xl font-bold text-center mb-2">Verificación en dos pasos</h1>
-    <p class="text-gray-600 text-sm text-center mb-8">
-      Introduce el código de seguridad que hemos enviado a tu correo o dispositivo.
+    <h1 class="text-3xl font-bold text-center mb-2">{{ 'TWOFACTOR.TITLE' | translate }}</h1>
+    <p class="text-gray-600 text-sm text-center mb-8">{{ 'TWOFACTOR.INTRO' | translate }}</p>
+
+    <p class="text-sm text-center text-gray-500" aria-live="polite">
+      {{ 'TWOFACTOR.EXPIRES' | translate }} <span class="font-bold tabular-nums">{{ tiempo }}</span>
     </p>
 
-    <p class="text-sm text-center text-gray-500">
-      El código expirará en <span class="font-bold">{{ count }}</span> segundos.
-    </p>
-
-    <form (ngSubmit)="onSubmit()" class="space-y-6">
+    <form (ngSubmit)="onSubmit()" class="space-y-6 mt-4">
       <div>
-        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
-          Código de verificación
-        </label>
-        <div class="relative">
-          <input
-            id="code"
-            type="text"
-            inputmode="numeric"
-            autocomplete="one-time-code"
-            placeholder="••••••"
-            [(ngModel)]="code"
-            name="code"
-            aria-label="Código de verificación"
-            required
-            class="w-full border border-gray-300 rounded-lg px-4 py-3 text-center tracking-[0.4em] text-lg font-medium focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
-          />
-        </div>
+        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">{{ 'TWOFACTOR.CODE' | translate }}</label>
+        <input
+          id="code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="7"
+          placeholder="••••••"
+          [(ngModel)]="code"
+          name="code"
+          required
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 text-center tracking-[0.4em] text-lg font-medium focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-colors"
+        />
       </div>
 
-      <p *ngIf="error" class="bg-red-50 border border-red-200 text-[#CC0000] text-sm text-center px-4 py-3 rounded">
-        {{ error }}
-      </p>
+      @if (error(); as e) {
+        <p role="alert" class="bg-red-50 border border-red-200 text-[#CC0000] text-sm text-center px-4 py-3 rounded">{{ e | translate }}</p>
+      }
 
       <button
         type="submit"
-        class="w-full bg-[#CC0000] hover:bg-[#990000] text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-      >
-        Confirmar código
+        [disabled]="enviando()"
+        class="w-full bg-[#CC0000] hover:bg-[#990000] disabled:opacity-60 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+        {{ (enviando() ? 'TWOFACTOR.SUBMITTING' : 'TWOFACTOR.SUBMIT') | translate }}
       </button>
 
       <p class="text-xs text-gray-500 text-center">
-        Si no has recibido el código, espera unos segundos y revisa también la carpeta de spam.
+        {{ 'TWOFACTOR.HELP' | translate }}
+        <a routerLink="/login" class="underline hover:text-gray-800">{{ 'TWOFACTOR.RESTART' | translate }}</a>
       </p>
     </form>
   </div>

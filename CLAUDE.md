@@ -31,7 +31,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 6. ~~Tailwind 3 y 4 mezclados~~ → solo Tailwind 3.4 (Angular lo detecta por `tailwind.config.js`; `postcss.config.js` no se usaba). Pasar a la v4 cambiaría valores por defecto y obligaría a revisar toda la UI.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. ~~Tests de relleno~~ → backend: 34 unitarios + 9 de integración con Testcontainers (`./mvnw verify`, necesita Docker); frontend: 31 con Karma (`npm run test:ci`) y `npm run i18n:check`. CI en `.github/workflows/ci.yml`. README con capturas en la raíz. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
-9. ~~Login/registro/2FA y OAuth sin revisar~~ → revisados el 26 nov (ver «Autenticación»). Para que funcione Google falta **añadir `http://localhost:8081/oauth2/callback` como URI de redirección autorizada** en Google Cloud Console (hoy Google responde `redirect_uri_mismatch`).
+9. ~~Login/registro/2FA y OAuth sin revisar~~ → revisados el 26 nov (ver «Autenticación»). Login con Google **probado y funcionando** el 26 nov. Cliente OAuth «Cliente web 1» del proyecto `gogaming-oauth2` de Google Cloud, con estas URIs de redirección: `http://localhost:8081/oauth2/callback` (local) y `https://www.gogaming.es/oauth2/callback` (para producción; cambiarla si el backend usa otro dominio).
 10. ~~`permitAll` de productos sin filtrar por método~~ → ahora solo `GET /api/v1/productos/**` es público.
 
 ## Estado de las claves (23 nov 2026)

@@ -50,7 +50,7 @@ Pendiente valorar: `spring.jpa.hibernate.ddl-auto=update` es cómodo, pero en pr
 
 ## 5. Servicios externos
 
-- [ ] **Google Cloud Console** → credenciales OAuth → URI de redirección autorizada: `BACKEND_BASE_URL/oauth2/callback`. En local, añade también `http://localhost:8081/oauth2/callback`: hoy Google responde `redirect_uri_mismatch`.
+- [ ] **Google Cloud Console** → credenciales OAuth → URI de redirección autorizada: `BACKEND_BASE_URL/oauth2/callback`. La de local (`http://localhost:8081/oauth2/callback`) ya está añadida.
 - [ ] **Stripe Dashboard** → Webhooks → endpoint `BACKEND_BASE_URL/api/v1/payments/webhook` con los eventos `checkout.session.completed` y `checkout.session.async_payment_succeeded`. Copia su secreto en `STRIPE_WEBHOOK_SECRET`.
 - [ ] **Administrador:** regístrate en la web y ejecuta en la BD
   `INSERT INTO user_roles (user_id, role_id) SELECT idusuario, 1 FROM usuarios WHERE correo_electronico = '…';`

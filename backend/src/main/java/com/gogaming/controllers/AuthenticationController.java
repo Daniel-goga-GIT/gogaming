@@ -8,8 +8,10 @@ import com.gogaming.entities.User;
 import com.gogaming.services.EmailService;
 import com.gogaming.services.UserService;
 import com.gogaming.utils.JwtUtil;
+import com.gogaming.utils.RateLimiter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,6 +53,13 @@ public class AuthenticationController {
     private final UserService userService;
     private final EmailService emailService;
 
+    /**
+     * Fuerza bruta de contraseñas: como mucho 10 fallos por IP y email, y 30 por IP, cada 15 minutos.
+     * (Detrás de un proxy, getRemoteAddr es la IP del proxy: al desplegar hay que configurar forward-headers.)
+     */
+    private final RateLimiter fallosPorCuenta = new RateLimiter(10, Duration.ofMinutes(15));
+    private final RateLimiter fallosPorIp = new RateLimiter(30, Duration.ofMinutes(15));
+
     /** Códigos erróneos por usuario desde el último código enviado. */
     private final Map<Long, Integer> intentosFallidos = new ConcurrentHashMap<>();
 
@@ -61,9 +72,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponseDTO> authenticate(@Valid @RequestBody AuthRequestDTO authRequest) {
+    public ResponseEntity<AuthResponseDTO> authenticate(@Valid @RequestBody AuthRequestDTO authRequest, HttpServletRequest request) {
         if (authRequest.getEmail() == null || authRequest.getPassword() == null) {
             return respuesta(HttpStatus.BAD_REQUEST, "El correo electrónico y la contraseña son obligatorios.");
+        }
+        String ip = request.getRemoteAddr();
+        String cuenta = ip + "|" + authRequest.getEmail().trim().toLowerCase(Locale.ROOT);
+        if (fallosPorCuenta.bloqueado(cuenta) || fallosPorIp.bloqueado(ip)) {
+            return respuesta(HttpStatus.TOO_MANY_REQUESTS, "Demasiados intentos fallidos. Espera unos minutos y vuelve a probar.");
         }
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -73,6 +89,7 @@ public class AuthenticationController {
             Long id = userService.getIdByEmail(email);
             List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
+            fallosPorCuenta.reiniciar(cuenta);
             String code = String.format("%06d", RANDOM.nextInt(1_000_000));
             userService.saveCode(code, id);
             intentosFallidos.remove(id);
@@ -86,6 +103,8 @@ public class AuthenticationController {
             return ResponseEntity.ok(new AuthResponseDTO(token, "Authentication successful first part", true));
 
         } catch (BadCredentialsException e) {
+            fallosPorCuenta.registrar(cuenta);
+            fallosPorIp.registrar(ip);
             return respuesta(HttpStatus.UNAUTHORIZED, "Credenciales inválidas. Por favor, verifica tus datos.");
         } catch (DisabledException e) {
             return respuesta(HttpStatus.FORBIDDEN, "El correo electrónico no está verificado.");

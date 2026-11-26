@@ -2,6 +2,7 @@ package com.gogaming.services;
 
 import com.gogaming.entities.Producto;
 import com.gogaming.repositories.ProductoRepository;
+import com.gogaming.utils.RateLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,13 +13,10 @@ import org.springframework.web.client.RestClient;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Deque;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -38,7 +36,7 @@ public class ChatService {
 
     private final ProductoRepository productoRepository;
     private final RestClient http = RestClient.create();
-    private final Map<String, Deque<Instant>> requestsByClient = new ConcurrentHashMap<>();
+    private final RateLimiter rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE, Duration.ofMinutes(1));
 
     @Value("${OPENROUTER_API_KEY:}")
     private String apiKey;
@@ -64,18 +62,7 @@ public class ChatService {
 
     /** Límite sencillo por cliente (IP): {@value #MAX_REQUESTS_PER_MINUTE} mensajes por minuto. */
     public boolean allow(String clientId) {
-        Instant now = Instant.now();
-        Deque<Instant> times = requestsByClient.computeIfAbsent(clientId, k -> new ArrayDeque<>());
-        synchronized (times) {
-            while (!times.isEmpty() && times.peekFirst().isBefore(now.minusSeconds(60))) {
-                times.pollFirst();
-            }
-            if (times.size() >= MAX_REQUESTS_PER_MINUTE) {
-                return false;
-            }
-            times.addLast(now);
-            return true;
-        }
+        return rateLimiter.intentar(clientId);
     }
 
     /** Devuelve la respuesta del asistente para la conversación dada. */

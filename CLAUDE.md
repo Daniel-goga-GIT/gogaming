@@ -30,7 +30,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 5. ~~`pom.xml` con dependencias duplicadas y sin usar~~ → limpiado el 26 nov. También se ha renombrado el paquete y springdoc pasa a 3.0.3 (la rama de Spring Boot 4).
 6. ~~Tailwind 3 y 4 mezclados~~ → solo Tailwind 3.4 (Angular lo detecta por `tailwind.config.js`; `postcss.config.js` no se usaba). Pasar a la v4 cambiaría valores por defecto y obligaría a revisar toda la UI.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
-8. Los tests son casi todos los generados por defecto y **10 de los 12 del frontend fallan** (no declaran `HttpClient` ni el router). No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
+8. ~~Tests de relleno~~ → backend: 34 unitarios + 9 de integración con Testcontainers (`./mvnw verify`, necesita Docker); frontend: 31 con Karma (`npm run test:ci`) y `npm run i18n:check`. CI en `.github/workflows/ci.yml`. No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
 9. ~~Login/registro/2FA y OAuth sin revisar~~ → revisados el 26 nov (ver «Autenticación»). Para que funcione Google falta **añadir `http://localhost:8081/oauth2/callback` como URI de redirección autorizada** en Google Cloud Console (hoy Google responde `redirect_uri_mismatch`).
 10. ~~`permitAll` de productos sin filtrar por método~~ → ahora solo `GET /api/v1/productos/**` es público.
 
@@ -44,7 +44,8 @@ Recomendado: volver a cambiar las claves que pasaron por el chat (OpenRouter y G
 
 - Nunca escribir secretos en el código; solo en `.env` (backend) o como variables de entorno al desplegar.
 - Commits pequeños y en español.
-- Hacer cambios por fases y comprobar que el proyecto compila después de cada una (`./mvnw test`, `npm run build`).
+- Hacer cambios por fases y comprobar después de cada una: `./mvnw verify` (backend, con Docker abierto), `npm run build`, `npm run test:ci` y `npm run i18n:check` (frontend).
+- Tests del frontend: proveedores comunes en `src/testing/test-providers.ts` (HttpClient de pruebas con el interceptor real, router y traducciones que devuelven la clave).
 
 ## Cómo arrancar en local
 
@@ -122,6 +123,6 @@ Frontend:
 3. ~~Limpieza: `pom.xml`, Tailwind y paquete `com.gogaming`~~ → hecho el 26 nov.
 4. ~~Revisar login/registro/2FA y OAuth~~ → hecho el 26 nov (había una forma de saltarse el 2FA). Límite de intentos en `/authenticate`: 10 fallos por IP y email y 30 por IP cada 15 min → 429 (`utils/RateLimiter`, también lo usa el chat). **Al desplegar detrás de un proxy** hay que activar `server.forward-headers-strategy` para que la IP sea la del cliente. Dashboard: tabla paginada (20 por página) con búsqueda; pedidos con detalle de líneas y cambio de estado (Preparando/Enviado/Entregado, validado en el backend). **Cancelar un pedido no está implementado** (requiere reembolso en Stripe y reponer stock).
    ~~Valoraciones una a una~~ → `GET /api/v1/productos/resenas/resumen?ids=1,2,3` (una consulta agrupada). Reseñas en `/api/v1/productos/{id}/resenas`. **Una reseña por usuario y producto** (409 + índice único `uq_resenas_usuario_producto`).
-5. Tests + README con capturas.
+5. ~~Tests~~ → hecho el 26 nov (ver punto 8 de «Problemas»). Falta el README con capturas.
 6. Servidor MCP (`mcp-server/`) sobre la API: buscar productos, consultar stock y resumen de pedidos.
 7. Despliegue (frontend + backend + BD gestionada) y webhook de Stripe en producción.

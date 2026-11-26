@@ -1,23 +1,21 @@
 import { TestBed } from '@angular/core/testing';
+import { testProviders } from '../testing/test-providers';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: testProviders(),
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it('should render title', () => {
+  it('monta la cabecera, el contenido y el pie', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, gogaming');
+    const html = fixture.nativeElement as HTMLElement;
+    expect(html.querySelector('router-outlet')).toBeTruthy();
+    expect(html.querySelector('app-header')).toBeTruthy();
+    expect(html.querySelector('app-footer')).toBeTruthy();
   });
 });

@@ -1,27 +1,23 @@
 package org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.TipoProducto;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AlfombrillaDTO {
+@EqualsAndHashCode(callSuper = true)
+public class AlfombrillaDTO extends ProductoDTO {
 
-    private Long id;
-    private String nombre;
-    private String marca;
-    private LocalDate fechaPublicacion;
-    private BigDecimal precio;
-    private Integer stock;
-    private TipoProducto tipoProducto;
-    private String image;
+    @NotBlank(message = "Dimensiones son obligatorias")
     private String dimensiones;
+
     private BigDecimal grosor;
+
+    @NotBlank(message = "Superficie es obligatoria")
     private String superficie;
 }

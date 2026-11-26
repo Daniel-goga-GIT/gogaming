@@ -58,22 +58,10 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/api-docs.yaml"
                         ).permitAll()
+                        // Catálogo y reseñas: lectura pública. Crear, editar, borrar y reseñar exige login.
+                        .requestMatchers(HttpMethod.GET, "/api/v1/productos/**").permitAll()
                         .requestMatchers(
                                 "/api/v1/authenticate",
-                                "/api/v1/productos/home",
-                                "/api/v1/productos/*",
-                                "/api/v1/productos/raton",
-                                "/api/v1/productos/raton/**",
-                                "/api/v1/productos/teclado",
-                                "/api/v1/productos/teclado/**",
-                                "/api/v1/productos/skate",
-                                "/api/v1/productos/skate/**",
-                                "/api/v1/productos/alfombrilla",
-                                "/api/v1/productos/alfombrilla/**",
-                                "/api/v1/productos/auriculares",
-                                "/api/v1/productos/auriculares/**",
-                                "/api/v1/productos/manga",
-                                "/api/v1/productos/manga/**",
                                 "/api/v1/twofactor",
                                 "/api/v1/users/image/**",
                                 "/oauth2/**",

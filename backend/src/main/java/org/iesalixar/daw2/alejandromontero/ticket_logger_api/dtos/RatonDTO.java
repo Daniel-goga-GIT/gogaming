@@ -1,30 +1,32 @@
 package org.iesalixar.daw2.alejandromontero.ticket_logger_api.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.TipoAgarre;
-import org.iesalixar.daw2.alejandromontero.ticket_logger_api.entities.TipoProducto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class RatonDTO {
+@EqualsAndHashCode(callSuper = true)
+public class RatonDTO extends ProductoDTO {
 
-    private Long id;
-    private String nombre;
-    private String marca;
-    private LocalDate fechaPublicacion;
-    private BigDecimal precio;
-    private Integer stock;
-    private TipoProducto tipoProducto;
-    private String image;
+    @NotNull(message = "Tipo de agarre es obligatorio")
     private TipoAgarre tipoAgarre;
+
+    @NotBlank(message = "Medidas son obligatorias")
     private String medidas;
+
+    @NotBlank(message = "Sensor es obligatorio")
     private String sensor;
+
+    @NotNull(message = "Peso es obligatorio")
     private BigDecimal peso;
+
+    @NotBlank(message = "Switches son obligatorios")
     private String switches;
 }

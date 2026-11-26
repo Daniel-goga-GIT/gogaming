@@ -52,7 +52,7 @@ Tiene catálogo con buscador, cesta, **pagos reales con Stripe Checkout** (modo 
 
 ```mermaid
 flowchart LR
-  A[Angular 20<br/>SSR + Tailwind] -- REST + JWT --> B[Spring Boot 4]
+  A[Angular 20<br/>Tailwind] -- REST + JWT --> B[Spring Boot 4]
   B --> C[(MariaDB)]
   B -- Checkout + webhook --> D[Stripe]
   B -- chat --> E[OpenRouter]
@@ -93,6 +93,10 @@ SELECT idusuario, 1 FROM usuarios WHERE correo_electronico = 'tu@email.com';
 
 **Pagos de prueba:** tarjeta `4242 4242 4242 4242`, cualquier fecha futura y cualquier CVC. Con 3D Secure: `4000 0027 6000 3184`.
 Para probar el webhook en local: `stripe listen --forward-to localhost:8081/api/v1/payments/webhook` y copia el `whsec_…` en `STRIPE_WEBHOOK_SECRET`.
+
+## Despliegue
+
+Imagen Docker del backend en `backend/Dockerfile`; los pasos están en [DEPLOY.md](DEPLOY.md).
 
 ## Tests
 

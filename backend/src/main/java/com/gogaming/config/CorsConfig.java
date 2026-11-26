@@ -9,7 +9,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig {
 
-    @Value("${cors.allowed-origins:*}") // Lee las URLs permitidas
+    /** Orígenes permitidos (CORS_ALLOWED_ORIGINS); por defecto, solo el frontend. Nunca "*": se envían credenciales. */
+    @Value("${cors.allowed-origins}")
     private String[] allowedOrigins;
 
     @Bean

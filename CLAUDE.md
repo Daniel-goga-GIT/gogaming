@@ -10,7 +10,7 @@ Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Respo
   Seguridad con JWT (keystore), 2FA por email, OAuth2 con Google, pagos con Stripe Checkout, reseñas y Swagger (springdoc).
   Paquete base: `com.gogaming` (clase principal `GogamingApplication`; artifact `gogaming-api`). Swagger: `/swagger-ui-custom.html` (JSON en `/api-docs`).
   Esquema y datos: `src/main/resources/schema.sql`, `data.sql`. Configuración por `.env` (dotenv-java).
-- `frontend/`: Angular 20 (standalone, SSR), Tailwind 3.4, ngx-translate (es/en), Karma/Jasmine.
+- `frontend/`: Angular 20 (standalone, SPA; `@angular/ssr` está instalado pero sin configurar), Tailwind 3.4, ngx-translate (es/en), Karma/Jasmine.
   Catálogo genérico: `core/catalogo.ts` (las 6 categorías: ruta, título, campos, icono) + `ProductoService`.
   `features/productos/listado` y `features/productos/detalle` sirven para todas las categorías (ver «Catálogo genérico»).
   `layout/ai-chat`: chat con IA (OpenRouter).
@@ -118,6 +118,8 @@ Frontend:
 
 ## Próximos pasos (por orden)
 
+Estado al cierre del 26 nov 2026: pasos 1 a 6 hechos; el 7 depende de decisiones del usuario.
+
 1. ~~Probar un pago completo con la tarjeta 4242~~ → hecho el 26 nov con Playwright: pedido creado, stock descontado, confirmación idempotente y email enviado.
 2. ~~Refactor del catálogo~~ → backend y frontend genéricos (26 nov). El dashboard también es genérico, con textos i18n y errores de validación del backend en los avisos.
 3. ~~Limpieza: `pom.xml`, Tailwind y paquete `com.gogaming`~~ → hecho el 26 nov.
@@ -125,4 +127,4 @@ Frontend:
    ~~Valoraciones una a una~~ → `GET /api/v1/productos/resenas/resumen?ids=1,2,3` (una consulta agrupada). Reseñas en `/api/v1/productos/{id}/resenas`. **Una reseña por usuario y producto** (409 + índice único `uq_resenas_usuario_producto`).
 5. ~~Tests + README con capturas~~ → hecho el 26 nov. Capturas en `docs/screenshots/` (se regeneran con el script de Playwright descrito en «Convenciones de UI»).
 6. ~~Servidor MCP~~ → hecho el 26 nov: `mcp-server/` (TypeScript, `@modelcontextprotocol/sdk` 1.32, stdio) con `buscar_productos`, `ver_producto`, `consultar_stock` y `resumen_pedidos` (este último necesita `GOGAMING_ADMIN_TOKEN`). Configurado en `.mcp.json`. Probado con `npm test` y `npm run smoke` (cliente MCP real).
-7. Despliegue (frontend + backend + BD gestionada) y webhook de Stripe en producción.
+7. Despliegue: preparado (`backend/Dockerfile` probado, CORS por defecto = `FRONTEND_BASE_URL`, `FORWARD_HEADERS_STRATEGY`). Falta decidir proveedor y dominio y seguir **`DEPLOY.md`** (claves nuevas, `environments.prod.ts`, Google y webhook de Stripe).

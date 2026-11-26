@@ -1,0 +1,7 @@
+target/
+.env
+.env.*
+storage/
+uploads/
+*.jks
+.idea/

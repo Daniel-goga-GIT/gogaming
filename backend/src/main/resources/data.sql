@@ -1,15 +1,11 @@
--- Contrasena: $2a$12$46Pmg5.FzcQwEiAeyhMCau.mlxNfF7Xm.6.Pav9OnpSAYrzZUWyzK = "password"
-INSERT IGNORE INTO usuarios (nombre, apellidos, correo_electronico, contrasena, enabled) VALUES
-    ('Alejandro', 'Montero Del Toro', 'alejandromonterodeltoro@gmail.com', '$2a$12$46Pmg5.FzcQwEiAeyhMCau.mlxNfF7Xm.6.Pav9OnpSAYrzZUWyzK', TRUE),
-    ('Daniel', 'Gonzalez Garica', 'danielgongar8@gmail.com', '$2a$12$46Pmg5.FzcQwEiAeyhMCau.mlxNfF7Xm.6.Pav9OnpSAYrzZUWyzK', TRUE);
+-- No se crean usuarios aquí: este script se ejecuta en cada arranque (también en producción)
+-- y unos administradores con contraseña conocida serían una puerta abierta.
+-- Para tener un admin: registrarse en la web y ejecutar
+--   INSERT INTO user_roles (user_id, role_id) SELECT idusuario, 1 FROM usuarios WHERE correo_electronico = '...';
 
 INSERT IGNORE INTO roles (id, name) VALUES
     (1, 'ROLE_ADMIN'),
     (2, 'ROLE_USER');
-
-INSERT IGNORE INTO user_roles (user_id, role_id) VALUES
-    (1, 1),
-    (2, 1);
 
 -- Catalogo de productos (IDs explícitos — IDs 13-16 reservados para teclados legacy, sustituidos por 39-49)
 INSERT IGNORE INTO productos (idproducto, nombre, marca, fecha_publicacion, precio, stock, tipo_producto, image) VALUES

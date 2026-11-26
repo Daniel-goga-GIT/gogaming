@@ -1,9 +1,0 @@
-Manejar DTOS
-Tabla comentarios que relacione productos y usuario
-Pedido/transaccion apunta al Usuario con el chare_id
-Order si ticket no
-
-CONSTRUCTOR
-S0-5 comentario fecha
-
-Ultima reseñas debajo de comprar

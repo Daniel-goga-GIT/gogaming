@@ -10,7 +10,7 @@ Plan general y calendario: `C:\Users\danie\Documents\Portfolio\CLAUDE.md`. Respo
   Seguridad con JWT (keystore), 2FA por email, OAuth2 con Google, pagos con Stripe Checkout, reseñas y Swagger (springdoc).
   Paquete base: `com.gogaming` (clase principal `GogamingApplication`; artifact `gogaming-api`). Swagger: `/swagger-ui-custom.html` (JSON en `/api-docs`).
   Esquema y datos: `src/main/resources/schema.sql`, `data.sql`. Configuración por `.env` (dotenv-java).
-- `frontend/`: Angular 20 (standalone, SSR), Tailwind, ngx-translate (es/en), Karma/Jasmine.
+- `frontend/`: Angular 20 (standalone, SSR), Tailwind 3.4, ngx-translate (es/en), Karma/Jasmine.
   Catálogo genérico: `core/catalogo.ts` (las 6 categorías: ruta, título, campos, icono) + `ProductoService`.
   `features/productos/listado` y `features/productos/detalle` sirven para todas las categorías (ver «Catálogo genérico»).
   `layout/ai-chat`: chat con IA (OpenRouter).
@@ -28,7 +28,7 @@ Las compras se guardan en `Ticket` y `LineaTicket`. También hay `Resena`, `User
 3. ~~El catálogo exigía login~~ → ya es público; el login se pide solo al pagar, al escribir reseñas y en el perfil.
 4. ~~Código repetido por categoría~~ → backend y frontend unificados el 26 nov (ver «Catálogo genérico»).
 5. ~~`pom.xml` con dependencias duplicadas y sin usar~~ → limpiado el 26 nov. También se ha renombrado el paquete y springdoc pasa a 3.0.3 (la rama de Spring Boot 4).
-6. Frontend: `tailwindcss` ^3 mezclado con `@tailwindcss/postcss` ^4.
+6. ~~Tailwind 3 y 4 mezclados~~ → solo Tailwind 3.4 (Angular lo detecta por `tailwind.config.js`; `postcss.config.js` no se usaba). Pasar a la v4 cambiaría valores por defecto y obligaría a revisar toda la UI.
 7. ~~Stripe no estaba integrado~~ → **Stripe Checkout integrado** (ver sección «Pagos con Stripe»).
 8. Los tests son casi todos los generados por defecto y **10 de los 12 del frontend fallan** (no declaran `HttpClient` ni el router). No hay README. El bundle inicial (634 kB) supera el presupuesto de 500 kB de `angular.json`. Repo git nuevo en `gogaming/` (historial limpio desde el 23 nov 2026).
 9. Revisado solo por encima: panel de admin (`/dashboard`), login/registro/2FA y el flujo de Google OAuth (el `FRONTEND_OAUTH2_REDIRECT_URI` del `.env` apunta mal: `https://localhost:8080/oauth2/callback`).
@@ -110,7 +110,7 @@ Frontend:
 
 1. ~~Probar un pago completo con la tarjeta 4242~~ → hecho el 26 nov con Playwright: pedido creado, stock descontado, confirmación idempotente y email enviado.
 2. ~~Refactor del catálogo~~ → backend y frontend genéricos (26 nov). El dashboard también es genérico, con textos i18n y errores de validación del backend en los avisos.
-3. Limpieza: `pom.xml` (dependencias duplicadas, Thymeleaf, `data-jdbc`, `annotations:RELEASE`), Tailwind 3/4 mezclados y renombrar el paquete a `com.gogaming`.
+3. ~~Limpieza: `pom.xml`, Tailwind y paquete `com.gogaming`~~ → hecho el 26 nov.
 4. Revisar login/registro/2FA y OAuth. Dashboard: falta paginar la tabla (hoy carga hasta 500 productos) y cambiar el estado de los pedidos.
    Las valoraciones se piden una a una por producto (N peticiones por página): estaría bien un endpoint por lotes. `RatingService` usa `/productos/raton/{id}/resenas` para todas las categorías (funciona, pero la URL engaña).
 5. Tests + README con capturas.

@@ -128,3 +128,8 @@ Estado al cierre del 26 nov 2026: pasos 1 a 6 hechos; el 7 depende de decisiones
 5. ~~Tests + README con capturas~~ → hecho el 26 nov. Capturas en `docs/screenshots/` (se regeneran con el script de Playwright descrito en «Convenciones de UI»).
 6. ~~Servidor MCP~~ → hecho el 26 nov: `mcp-server/` (TypeScript, `@modelcontextprotocol/sdk` 1.32, stdio) con `buscar_productos`, `ver_producto`, `consultar_stock` y `resumen_pedidos` (este último necesita `GOGAMING_ADMIN_TOKEN`). Configurado en `.mcp.json`. Probado con `npm test` y `npm run smoke` (cliente MCP real).
 7. Despliegue: preparado (`backend/Dockerfile` probado, CORS por defecto = `FRONTEND_BASE_URL`, `FORWARD_HEADERS_STRATEGY`). Falta decidir proveedor y dominio y seguir **`DEPLOY.md`** (claves nuevas, `environments.prod.ts`, Google y webhook de Stripe).
+8. Práctica de los cursos de Claude Code (pendiente, acordado el 27 nov): crear `.claude/settings.json` con un hook `PreToolUse` que bloquee editar `backend/.env`, y un comando/skill `/revisar` que ejecute `./mvnw verify`, `npm run build`, `npm run test:ci` e `npm run i18n:check` y resuma los fallos.
+
+Otros pendientes conocidos: cancelar pedidos (reembolso en Stripe + reponer stock) y el bundle inicial por encima del presupuesto de 500 kB.
+
+Estado local al cerrar el 27 nov: BD con 2 pedidos de prueba (GG-261126-LLVX2 y GG-261126-FVY2Y) y stock de Beast X Pro en 16. Los cursos y el portfolio se siguen en `Portfolio/CLAUDE.md`.

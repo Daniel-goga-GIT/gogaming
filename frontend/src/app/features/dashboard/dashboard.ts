@@ -45,6 +45,17 @@ export class Dashboard implements OnInit {
   protected readonly guardando = signal(false);
   protected sidebarOpen = false;
 
+  /** Paginación y búsqueda del catálogo. */
+  protected static readonly TAMANO_PAGINA = 20;
+  protected pagina = 0;
+  protected busqueda = '';
+  protected readonly totalPaginas = signal(0);
+  protected readonly totalProductos = signal(0);
+
+  /** Pedidos: estados que puede poner el admin (los mismos que acepta el backend) y fila desplegada. */
+  protected readonly estados = ['Preparando', 'Enviado', 'Entregado'];
+  protected readonly pedidoAbierto = signal<number | null>(null);
+
   /** Producto que se está creando o editando (null = se muestra la tabla). */
   protected formulario: Formulario | null = null;
   protected editandoId: number | null = null;
@@ -61,6 +72,8 @@ export class Dashboard implements OnInit {
     this.seccion.set(seccion);
     this.cerrarFormulario();
     this.sidebarOpen = false;
+    this.pagina = 0;
+    this.busqueda = '';
     this.cargar();
   }
 
@@ -70,12 +83,56 @@ export class Dashboard implements OnInit {
     const fin = { error: () => { this.error.set(true); this.loading.set(false); } };
     const categoria = this.categoria;
     if (!categoria) {
-      this.ticketService.getAllTickets().subscribe({ next: p => { this.pedidos.set(p); this.loading.set(false); }, ...fin });
+      this.ticketService.getAllTickets().subscribe({
+        // Los más recientes primero.
+        next: p => { this.pedidos.set([...p].sort((a, b) => b.fecha.localeCompare(a.fecha))); this.loading.set(false); },
+        ...fin,
+      });
       return;
     }
-    this.productoService.listar(categoria.slug, { size: 500 }).subscribe({
-      next: pagina => { this.productos.set(pagina.content); this.loading.set(false); },
-      ...fin,
+    this.productoService
+      .listar(categoria.slug, { page: this.pagina, size: Dashboard.TAMANO_PAGINA, nombre: this.busqueda, sort: 'id', direction: 'desc' })
+      .subscribe({
+        next: pagina => {
+          this.productos.set(pagina.content);
+          this.totalPaginas.set(pagina.totalPages);
+          this.totalProductos.set(pagina.totalElements);
+          this.loading.set(false);
+        },
+        ...fin,
+      });
+  }
+
+  protected buscar(): void {
+    this.pagina = 0;
+    this.cargar();
+  }
+
+  protected irAPagina(pagina: number): void {
+    if (pagina >= 0 && pagina < this.totalPaginas()) {
+      this.pagina = pagina;
+      this.cargar();
+    }
+  }
+
+  protected alternarPedido(id: number): void {
+    this.pedidoAbierto.update(actual => (actual === id ? null : id));
+  }
+
+  protected cambiarEstado(pedido: TicketResponse, estado: string): void {
+    if (estado === pedido.estado) return;
+    this.ticketService.updateEstado(pedido.id, estado).subscribe({
+      next: actualizado => {
+        this.pedidos.update(lista => lista.map(p => (p.id === actualizado.id ? actualizado : p)));
+        this.notify.success(this.translate.instant('ADMIN.STATUS_UPDATED', {
+          number: pedido.numeroTicket,
+          status: this.translate.instant('ORDER_STATUS.' + estado),
+        }));
+      },
+      error: () => {
+        this.cargar(); // para que el selector vuelva a mostrar el estado real
+        this.notify.error(this.translate.instant('ADMIN.STATUS_ERROR'));
+      },
     });
   }
 

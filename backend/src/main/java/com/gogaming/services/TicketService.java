@@ -107,8 +107,17 @@ public class TicketService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Estados que puede poner el administrador. «Cancelado» no está: cancelar exige devolver
+     * el dinero en Stripe y reponer el stock, y eso todavía no está implementado.
+     */
+    public static final List<String> ESTADOS = List.of("Preparando", "Enviado", "Entregado");
+
     @Transactional
     public TicketResponseDTO updateEstado(Long ticketId, String estado) {
+        if (!ESTADOS.contains(estado)) {
+            throw new IllegalArgumentException("Estado no válido. Valores permitidos: " + String.join(", ", ESTADOS));
+        }
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado: " + ticketId));
         ticket.setEstado(estado);

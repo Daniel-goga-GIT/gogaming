@@ -362,7 +362,12 @@
     "USER_ID": "User ID",
     "TOTAL": "Total",
     "METHOD": "Method",
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "PAGINATION": "Pagination",
+    "STATUS_UPDATED": "Order {{number}}: {{status}}",
+    "STATUS_ERROR": "We couldn't change the order status",
+    "ORDER_COUNT_ONE": "1 order in total",
+    "PRODUCT_COUNT_ONE": "1 product"
   },
   "TWOFACTOR": {
     "TITLE": "Two-step verification",
@@ -380,5 +385,11 @@
     "PROCESSING": "Signing in with Google…",
     "ERROR_TITLE": "We couldn't sign you in with Google",
     "ERROR_MSG": "Please try again or use your email and password."
+  },
+  "ORDER_STATUS": {
+    "Preparando": "Processing",
+    "Enviado": "Shipped",
+    "Entregado": "Delivered",
+    "Cancelado": "Cancelled"
   }
 }

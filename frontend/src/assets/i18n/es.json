@@ -362,7 +362,12 @@
     "USER_ID": "ID de usuario",
     "TOTAL": "Total",
     "METHOD": "Método",
-    "STATUS": "Estado"
+    "STATUS": "Estado",
+    "PAGINATION": "Paginación",
+    "STATUS_UPDATED": "Pedido {{number}}: {{status}}",
+    "STATUS_ERROR": "No se ha podido cambiar el estado del pedido",
+    "ORDER_COUNT_ONE": "1 pedido en total",
+    "PRODUCT_COUNT_ONE": "1 producto"
   },
   "TWOFACTOR": {
     "TITLE": "Verificación en dos pasos",
@@ -380,5 +385,11 @@
     "PROCESSING": "Iniciando sesión con Google…",
     "ERROR_TITLE": "No se ha podido iniciar sesión con Google",
     "ERROR_MSG": "Inténtalo de nuevo o entra con tu email y contraseña."
+  },
+  "ORDER_STATUS": {
+    "Preparando": "Preparando",
+    "Enviado": "Enviado",
+    "Entregado": "Entregado",
+    "Cancelado": "Cancelado"
   }
 }

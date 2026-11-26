@@ -133,8 +133,7 @@ export class DetalleProducto implements OnInit {
         this.cargarReviews();
       },
       error: err => {
-        // El backend devuelve el motivo como texto (p. ej. "Ya has valorado este producto").
-        this.reviewError.set(typeof err?.error === 'string' ? err.error : 'RATINGS.SAVE_ERROR');
+        this.reviewError.set(err?.status === 409 ? 'RATINGS.ALREADY_REVIEWED' : 'RATINGS.SAVE_ERROR');
         this.submittingReview.set(false);
       },
     });

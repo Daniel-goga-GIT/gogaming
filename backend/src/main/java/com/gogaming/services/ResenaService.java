@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ResenaService {
@@ -49,18 +52,33 @@ public class ResenaService {
 
     public ProductRatingSummaryDTO getProductSummary(Long productId) {
         ensureProductExists(productId);
+        return getSummaries(List.of(productId)).get(productId);
+    }
 
-        Double average = resenaRepository.findAverageByProductoId(productId);
-        double normalizedAverage = average == null ? 0.0 : BigDecimal.valueOf(average).setScale(1, RoundingMode.HALF_UP).doubleValue();
-
-        long one   = resenaRepository.countByProductoIdAndCalificacion(productId, 1);
-        long two   = resenaRepository.countByProductoIdAndCalificacion(productId, 2);
-        long three = resenaRepository.countByProductoIdAndCalificacion(productId, 3);
-        long four  = resenaRepository.countByProductoIdAndCalificacion(productId, 4);
-        long five  = resenaRepository.countByProductoIdAndCalificacion(productId, 5);
-        long total = one + two + three + four + five;
-
-        return new ProductRatingSummaryDTO(productId, normalizedAverage, total, one, two, three, four, five);
+    /**
+     * Resumen de valoraciones de varios productos con una sola consulta.
+     * Los productos sin reseñas (o que no existen) aparecen con todo a cero.
+     */
+    public Map<Long, ProductRatingSummaryDTO> getSummaries(Collection<Long> productIds) {
+        Map<Long, long[]> porNota = new LinkedHashMap<>();
+        productIds.forEach(id -> porNota.put(id, new long[6]));
+        if (!productIds.isEmpty()) {
+            for (Object[] fila : resenaRepository.contarPorProductoYNota(productIds)) {
+                long[] cuentas = porNota.get((Long) fila[0]);
+                int nota = ((Number) fila[1]).intValue();
+                if (cuentas != null && nota >= 1 && nota <= 5) {
+                    cuentas[nota] = (Long) fila[2];
+                }
+            }
+        }
+        Map<Long, ProductRatingSummaryDTO> resumen = new LinkedHashMap<>();
+        porNota.forEach((id, c) -> {
+            long total = c[1] + c[2] + c[3] + c[4] + c[5];
+            double media = total == 0 ? 0.0 : BigDecimal.valueOf((c[1] + 2 * c[2] + 3 * c[3] + 4 * c[4] + 5 * c[5]) / (double) total)
+                    .setScale(1, RoundingMode.HALF_UP).doubleValue();
+            resumen.put(id, new ProductRatingSummaryDTO(id, media, total, c[1], c[2], c[3], c[4], c[5]));
+        });
+        return resumen;
     }
 
     public ResenaResponseDTO createReview(Long userId, Long productId, ResenaCreateDTO body) {
@@ -68,6 +86,10 @@ public class ResenaService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         Producto producto = productoRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        if (resenaRepository.existsByUsuarioIdAndProductoId(userId, productId)) {
+            throw new ResenaDuplicadaException();
+        }
 
         Resena resena = new Resena();
         resena.setUsuario(usuario);
@@ -97,5 +119,12 @@ public class ResenaService {
                 resena.getFechaCreacion(),
                 resena.getFechaActualizacion()
         );
+    }
+
+    /** El usuario ya ha valorado ese producto. */
+    public static class ResenaDuplicadaException extends RuntimeException {
+        public ResenaDuplicadaException() {
+            super("Ya has valorado este producto.");
+        }
     }
 }

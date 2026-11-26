@@ -90,11 +90,16 @@ export class ListadoProductos implements OnInit {
   }
 
   private cargarValoraciones(productos: ProductoDTO[]): void {
-    productos.forEach(p => {
-      this.ratingService.getProductSummary(p.id).subscribe({
-        next: s => this.valoraciones.update(v => ({ ...v, [p.id]: { media: s.averageRating, total: s.totalReviews } })),
-        error: () => {},
+    this.ratingService
+      .getSummaries(productos.map(p => p.id))
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: resumenes => {
+          const valoraciones: Record<number, { media: number; total: number }> = {};
+          Object.values(resumenes).forEach(r => (valoraciones[r.productId] = { media: r.averageRating, total: r.totalReviews }));
+          this.valoraciones.set(valoraciones);
+        },
+        error: () => this.valoraciones.set({}),
       });
-    });
   }
 }

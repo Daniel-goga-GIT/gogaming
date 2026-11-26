@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -15,8 +16,10 @@ public interface ResenaRepository extends JpaRepository<Resena, Long> {
 
     List<Resena> findByUsuarioIdOrderByFechaCreacionDesc(Long userId);
 
-    @Query("SELECT AVG(r.calificacion) FROM Resena r WHERE r.producto.id = :productId")
-    Double findAverageByProductoId(@Param("productId") Long productId);
+    boolean existsByUsuarioIdAndProductoId(Long userId, Long productId);
 
-    long countByProductoIdAndCalificacion(Long productId, int calificacion);
+    /** Número de reseñas por producto y por nota (1-5): filas [productoId, calificacion, total]. */
+    @Query("SELECT r.producto.id, r.calificacion, COUNT(r) FROM Resena r " +
+            "WHERE r.producto.id IN :ids GROUP BY r.producto.id, r.calificacion")
+    List<Object[]> contarPorProductoYNota(@Param("ids") Collection<Long> ids);
 }

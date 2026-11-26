@@ -167,4 +167,6 @@ CREATE TABLE IF NOT EXISTS resenas (
 );
 
 CREATE INDEX IF NOT EXISTS idx_resenas_producto ON resenas (idproducto);
+-- Una reseña por usuario y producto (si no, cualquiera podría inflar la media).
+CREATE UNIQUE INDEX IF NOT EXISTS uq_resenas_usuario_producto ON resenas (idusuario, idproducto);
 CREATE INDEX IF NOT EXISTS idx_resenas_fecha ON resenas (fecha_creacion);

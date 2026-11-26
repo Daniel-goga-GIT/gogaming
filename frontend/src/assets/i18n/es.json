@@ -233,7 +233,8 @@
     "LOAD_ERROR": "No se han podido cargar las valoraciones.",
     "INVALID_SCORE": "La puntuación debe estar entre 1 y 5 estrellas.",
     "SAVE_ERROR": "No se ha podido guardar la reseña.",
-    "PUBLISHED": "Reseña publicada. ¡Gracias por tu opinión!"
+    "PUBLISHED": "Reseña publicada. ¡Gracias por tu opinión!",
+    "ALREADY_REVIEWED": "Ya has valorado este producto. Solo se permite una reseña por persona."
   },
   "NOTIFY": {
     "CART_ADDED": "Añadido a la cesta",
@@ -259,7 +260,8 @@
     "ADD_TO_CART": "Añadir a la cesta",
     "NO_REVIEWS_CTA": "Sin opiniones todavía · ¡sé el primero!",
     "NOT_FOUND": "Este producto no existe o ya no está disponible.",
-    "LOAD_ERROR": "No se ha podido cargar el producto. Inténtalo de nuevo en unos segundos."
+    "LOAD_ERROR": "No se ha podido cargar el producto. Inténtalo de nuevo en unos segundos.",
+    "REVIEWS_COUNT_ONE": "1 opinión"
   },
   "LIST": {
     "SEARCH_PLACEHOLDER": "Buscar por nombre o marca…",

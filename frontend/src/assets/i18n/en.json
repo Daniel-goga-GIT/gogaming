@@ -233,7 +233,8 @@
     "LOAD_ERROR": "We couldn't load the reviews.",
     "INVALID_SCORE": "The rating must be between 1 and 5 stars.",
     "SAVE_ERROR": "We couldn't save your review.",
-    "PUBLISHED": "Review published. Thanks for your feedback!"
+    "PUBLISHED": "Review published. Thanks for your feedback!",
+    "ALREADY_REVIEWED": "You have already reviewed this product. Only one review per person is allowed."
   },
   "NOTIFY": {
     "CART_ADDED": "Added to cart",
@@ -259,7 +260,8 @@
     "ADD_TO_CART": "Add to cart",
     "NO_REVIEWS_CTA": "No reviews yet · be the first!",
     "NOT_FOUND": "This product doesn't exist or is no longer available.",
-    "LOAD_ERROR": "We couldn't load the product. Please try again in a few seconds."
+    "LOAD_ERROR": "We couldn't load the product. Please try again in a few seconds.",
+    "REVIEWS_COUNT_ONE": "1 review"
   },
   "LIST": {
     "SEARCH_PLACEHOLDER": "Search by name or brand…",

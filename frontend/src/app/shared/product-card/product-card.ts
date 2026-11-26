@@ -53,7 +53,7 @@ import { PricePipe } from '../pipes/price.pipe';
             </span>
             <span class="font-semibold text-gray-800">{{ rating().toFixed(1) }}</span>
             <span class="text-gray-500">({{ reviews() }})</span>
-            <span class="sr-only">{{ 'PRODUCT.REVIEWS_COUNT' | translate: { count: reviews() } }}</span>
+            <span class="sr-only">{{ (reviews() === 1 ? 'PRODUCT.REVIEWS_COUNT_ONE' : 'PRODUCT.REVIEWS_COUNT') | translate: { count: reviews() } }}</span>
           } @else {
             <span class="text-gray-400">{{ 'PRODUCT.NO_REVIEWS' | translate }}</span>
           }

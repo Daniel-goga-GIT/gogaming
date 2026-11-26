@@ -41,24 +41,9 @@ export class Home implements OnInit {
   }
 
   loadRatingsForHome(): void {
-    this.ratones.forEach((raton) => {
-      this.ratingService.getProductSummary(raton.id).subscribe({
-        next: (summary) => {
-          this.ratingSummaryMap[raton.id] = summary;
-        },
-        error: () => {
-          this.ratingSummaryMap[raton.id] = {
-            productId: raton.id,
-            averageRating: 0,
-            totalReviews: 0,
-            oneStar: 0,
-            twoStars: 0,
-            threeStars: 0,
-            fourStars: 0,
-            fiveStars: 0
-          };
-        }
-      });
+    this.ratingService.getSummaries(this.ratones.map(r => r.id)).subscribe({
+      next: resumenes => (this.ratingSummaryMap = resumenes),
+      error: () => (this.ratingSummaryMap = {}),
     });
   }
 

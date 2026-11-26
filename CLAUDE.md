@@ -121,7 +121,7 @@ Frontend:
 2. ~~Refactor del catálogo~~ → backend y frontend genéricos (26 nov). El dashboard también es genérico, con textos i18n y errores de validación del backend en los avisos.
 3. ~~Limpieza: `pom.xml`, Tailwind y paquete `com.gogaming`~~ → hecho el 26 nov.
 4. ~~Revisar login/registro/2FA y OAuth~~ → hecho el 26 nov (había una forma de saltarse el 2FA). Límite de intentos en `/authenticate`: 10 fallos por IP y email y 30 por IP cada 15 min → 429 (`utils/RateLimiter`, también lo usa el chat). **Al desplegar detrás de un proxy** hay que activar `server.forward-headers-strategy` para que la IP sea la del cliente. Dashboard: falta paginar la tabla (hoy carga hasta 500 productos) y cambiar el estado de los pedidos.
-   Las valoraciones se piden una a una por producto (N peticiones por página): estaría bien un endpoint por lotes. `RatingService` usa `/productos/raton/{id}/resenas` para todas las categorías (funciona, pero la URL engaña).
+   ~~Valoraciones una a una~~ → `GET /api/v1/productos/resenas/resumen?ids=1,2,3` (una consulta agrupada). Reseñas en `/api/v1/productos/{id}/resenas`. **Una reseña por usuario y producto** (409 + índice único `uq_resenas_usuario_producto`).
 5. Tests + README con capturas.
 6. Servidor MCP (`mcp-server/`) sobre la API: buscar productos, consultar stock y resumen de pedidos.
 7. Despliegue (frontend + backend + BD gestionada) y webhook de Stripe en producción.

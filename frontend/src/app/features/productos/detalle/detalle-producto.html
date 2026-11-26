@@ -68,7 +68,7 @@
                   }
                 </div>
               }
-              <span class="text-gray-500">{{ (summary()?.totalReviews ? 'PRODUCT.REVIEWS_COUNT' : 'PRODUCT.NO_REVIEWS_CTA') | translate: { count: summary()?.totalReviews } }}</span>
+              <span class="text-gray-500">{{ (!summary()?.totalReviews ? 'PRODUCT.NO_REVIEWS_CTA' : summary()?.totalReviews === 1 ? 'PRODUCT.REVIEWS_COUNT_ONE' : 'PRODUCT.REVIEWS_COUNT') | translate: { count: summary()?.totalReviews } }}</span>
             </div>
             <div class="flex items-center gap-4 mt-4">
               <div class="flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider"

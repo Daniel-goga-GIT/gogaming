@@ -12,9 +12,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * Reseñas de productos (de cualquier categoría). Leer es público; escribir exige login.
+ */
 @RestController
-@RequestMapping("/api/v1/productos/raton/{productId}/resenas")
+@RequestMapping("/api/v1/productos")
 public class ResenaController {
+
+    /** Máximo de productos por petición en /resenas/resumen. */
+    private static final int MAX_IDS = 100;
+    private static final String PRODUCTO = "/{productId:\\d+}";
 
     private final ResenaService resenaService;
     private final JwtUtil jwtUtil;
@@ -24,7 +33,7 @@ public class ResenaController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
+    @GetMapping(PRODUCTO + "/resenas")
     public ResponseEntity<?> getReviews(@PathVariable Long productId) {
         try {
             ProductReviewsResponseDTO response = resenaService.getProductReviews(productId);
@@ -36,7 +45,7 @@ public class ResenaController {
         }
     }
 
-    @GetMapping("/summary")
+    @GetMapping(PRODUCTO + "/resenas/summary")
     public ResponseEntity<?> getSummary(@PathVariable Long productId) {
         try {
             ProductRatingSummaryDTO response = resenaService.getProductSummary(productId);
@@ -48,8 +57,17 @@ public class ResenaController {
         }
     }
 
+    /** Resumen de valoraciones de varios productos a la vez: ?ids=1,2,3 → { "1": {...}, "2": {...} }. */
+    @GetMapping("/resenas/resumen")
+    public ResponseEntity<?> getSummaries(@RequestParam List<Long> ids) {
+        if (ids.size() > MAX_IDS) {
+            return ResponseEntity.badRequest().body("Como mucho " + MAX_IDS + " productos por petición");
+        }
+        return ResponseEntity.ok(resenaService.getSummaries(new java.util.LinkedHashSet<>(ids)));
+    }
+
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    @PostMapping
+    @PostMapping(PRODUCTO + "/resenas")
     public ResponseEntity<?> createReview(
             @PathVariable Long productId,
             @RequestHeader("Authorization") String tokenHeader,
@@ -59,6 +77,8 @@ public class ResenaController {
             Long userId = extractUserId(tokenHeader);
             ResenaResponseDTO created = resenaService.createReview(userId, productId, body);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
+        } catch (ResenaService.ResenaDuplicadaException | org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Ya has valorado este producto.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
